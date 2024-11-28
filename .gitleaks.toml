@@ -1,12 +1,5358 @@
-# This is NOT the default gitleaks config. The default gitleaks config is located 
-# here: https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
-# This gitleaks config extends the default config and ignores secrets located in the `cmd/generate/config/rules`
-
-title = "Gitleaks development"
-[extend]
-useDefault = true
+title = "gitleaks config"
 
 [allowlist]
-paths = [
-  '''(^|/)cmd/generate/config/rules''',
+description = "global allow lists"
+regexes = [
+    '''(?i)^true|false|null$''',
+    '''^(?i:a+|b+|c+|d+|e+|f+|g+|h+|i+|j+|k+|l+|m+|n+|o+|p+|q+|r+|s+|t+|u+|v+|w+|x+|y+|z+|\*+|\.+)$''',
+    '''^\$(\d+|{\d+})$''',
+    '''^\$([A-Z_]+|[a-z_]+)$''',
+    '''^\${([A-Z_]+|[a-z_]+)}$''',
+    '''^\{\{[ \t]*[\w ().|]+[ \t]*}}$''',
+    '''^\$\{\{[ \t]*((env|github|secrets|vars)(\.[A-Za-z]\w+)+[\w "'&./=|]*)[ \t]*}}$''',
+    '''^%([A-Z_]+|[a-z_]+)%$''',
+    '''^%[+\-# 0]?[bcdeEfFgGoOpqstTUvxX]$''',
+    '''^\{\d{0,2}}$''',
+    '''^@([A-Z_]+|[a-z_]+)@$''',
 ]
+paths = [
+    '''gitleaks\.toml''',
+    '''(?i)\.(bmp|gif|jpe?g|svg|tiff?)$''',
+    '''\.(eot|[ot]tf|woff2?)$''',
+    '''(.*?)(doc|docx|zip|xls|pdf|bin|socket|vsidx|v2|suo|wsuo|.dll|pdb|exe|gltf)$''',
+    '''go\.(mod|sum|work(\.sum)?)$''',
+    '''(^|/)vendor/modules\.txt$''',
+    '''(^|/)vendor/(github\.com|golang\.org/x|google\.golang\.org|gopkg\.in|istio\.io|k8s\.io|sigs\.k8s\.io)/.*$''',
+    '''(^|/)gradlew(\.bat)?$''',
+    '''(^|/)gradle\.lockfile$''',
+    '''(^|/)mvnw(\.cmd)?$''',
+    '''(^|/)\.mvn/wrapper/MavenWrapperDownloader\.java$''',
+    '''(^|/)node_modules/.*?$''',
+    '''(^|/)package-lock\.json$''',
+    '''(^|/)yarn\.lock$''',
+    '''(^|/)pnpm-lock\.yaml$''',
+    '''(^|/)npm-shrinkwrap\.json$''',
+    '''(^|/)bower_components/.*?$''',
+    '''(^|/)(angular|jquery(-?ui)?|plotly|swagger-?ui)[a-zA-Z0-9.-]*(\.min)?\.js(\.map)?$''',
+    '''(^|/)(Pipfile|poetry)\.lock$''',
+    '''(?i)/?(v?env|virtualenv)/lib(64)?/.+$''',
+    '''(?i)(^|/)(lib(64)?/python[23](\.\d{1,2})+/|python/[23](\.\d{1,2})+/lib(64)?/).+$''',
+    '''(?i)(^|/)[a-z0-9_.]+-[0-9.]+\.dist-info/.+$''',
+    '''(^|/)vendor/(bundle|ruby)/.*?$''',
+    '''\.gem$''',
+    '''verification-metadata.xml''',
+    '''Database.refactorlog''',
+]
+stopwords = [
+    "014df517-39d1-4453-b7b3-9930c563627c",
+]
+
+
+[[rules]]
+    ID = "AWS API_0"
+    regex = '''AKIA[0-9A-Z]{18}'''
+
+
+[[rules]]
+    ID = "AWS API Key_1"
+    description = '''AWS API Key'''
+    regex = '''AKIA[0-9A-Z]{16}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "AWS ARN_2"
+    description = '''AWS ARN'''
+    regex = '''arn:aws:[a-z0-9-]+:[a-z]{2}-[a-z]+-[0-9]+:[0-9]+:.+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "AWS Access Key ID Value_3"
+    description = '''AWS Access Key ID Value'''
+    regex = '''(A3T[A-Z0-9]|AKIA|AGPA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "AWS AppSync GraphQL Key_4"
+    description = '''AWS AppSync GraphQL Key'''
+    regex = '''da2-[a-z0-9]{26}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "AWS MWS key_5"
+    description = '''AWS MWS key'''
+    regex = '''amzn\.mws\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "AWS RDS_6"
+    description = '''AWS RDS'''
+    regex = '''[0-9a-z._-]+.rds.amazonaws.com'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "AWS S3 Bucket_7"
+    description = '''AWS S3 Bucket'''
+    regex = '''s3://[0-9a-z._/-]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "AWS cred file info_8"
+    description = '''AWS cred file info'''
+    regex = '''(aws_access_key_id|aws_secret_access_key)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Abbysale_9"
+    description = '''Abbysale'''
+    regex = '''(?:abbysale).{0,40}\b([a-z0-9A-Z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Abstract_10"
+    description = '''Abstract'''
+    regex = '''(?:abstract).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Abuseipdb_11"
+    description = '''Abuseipdb'''
+    regex = '''(?:abuseipdb).{0,40}\b([a-z0-9]{80})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Accuweather_12"
+    description = '''Accuweather'''
+    regex = '''(?:accuweather).{0,40}([a-z0-9A-Z\%]{35})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Adafruitio_13"
+    description = '''Adafruitio'''
+    regex = '''\b(aio\_[a-zA-Z0-9]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Adobeio - 1_14"
+    description = '''Adobeio - 1'''
+    regex = '''(?:adobe).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Adzuna - 1_15"
+    description = '''Adzuna - 1'''
+    regex = '''(?:adzuna).{0,40}\b([a-z0-9]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Adzuna - 2_16"
+    description = '''Adzuna - 2'''
+    regex = '''(?:adzuna).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Aeroworkflow - 1_17"
+    description = '''Aeroworkflow - 1'''
+    regex = '''(?:aeroworkflow).{0,40}\b([0-9]{1,})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Aeroworkflow - 2_18"
+    description = '''Aeroworkflow - 2'''
+    regex = '''(?:aeroworkflow).{0,40}\b([a-zA-Z0-9^!]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Agora_19"
+    description = '''Agora'''
+    regex = '''(?:agora).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Airbrakeprojectkey - 1_20"
+    description = '''Airbrakeprojectkey - 1'''
+    regex = '''(?:airbrake).{0,40}\b([0-9]{6})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Airbrakeprojectkey - 2_21"
+    description = '''Airbrakeprojectkey - 2'''
+    regex = '''(?:airbrake).{0,40}\b([a-zA-Z-0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Airbrakeuserkey_22"
+    description = '''Airbrakeuserkey'''
+    regex = '''(?:airbrake).{0,40}\b([a-zA-Z-0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Airship_23"
+    description = '''Airship'''
+    regex = '''(?:airship).{0,40}\b([0-9Aa-zA-Z]{91})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Airvisual_24"
+    description = '''Airvisual'''
+    regex = '''(?:airvisual).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Alconost_25"
+    description = '''Alconost'''
+    regex = '''(?:alconost).{0,40}\b([0-9Aa-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Alegra - 1_26"
+    description = '''Alegra - 1'''
+    regex = '''(?:alegra).{0,40}\b([a-z0-9-]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Alegra - 2_27"
+    description = '''Alegra - 2'''
+    regex = '''(?:alegra).{0,40}\b([a-zA-Z0-9.-@]{25,30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Aletheiaapi_28"
+    description = '''Aletheiaapi'''
+    regex = '''(?:aletheiaapi).{0,40}\b([A-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Alibaba - 2_29"
+    description = '''Alibaba - 2'''
+    regex = '''\b(LTAI[a-zA-Z0-9]{17,21})[\"' ;\s]*'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Alienvault_30"
+    description = '''Alienvault'''
+    regex = '''(?:alienvault).{0,40}\b([a-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Allsports_31"
+    description = '''Allsports'''
+    regex = '''(?:allsports).{0,40}\b([0-9a-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Amadeus - 1_32"
+    description = '''Amadeus - 1'''
+    regex = '''(?:amadeus).{0,40}\b([0-9A-Za-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Amadeus - 2_33"
+    description = '''Amadeus - 2'''
+    regex = '''(?:amadeus).{0,40}\b([0-9A-Za-z]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ambee_34"
+    description = '''Ambee'''
+    regex = '''(?:ambee).{0,40}\b([0-9a-f]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Amplitudeapikey_35"
+    description = '''Amplitudeapikey'''
+    regex = '''(?:amplitude).{0,40}\b([a-f0-9]{32})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apacta_36"
+    description = '''Apacta'''
+    regex = '''(?:apacta).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Api2cart_37"
+    description = '''Api2cart'''
+    regex = '''(?:api2cart).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apideck - 1_38"
+    description = '''Apideck - 1'''
+    regex = '''\b(sk_live_[a-z0-9A-Z-]{93})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apideck - 2_39"
+    description = '''Apideck - 2'''
+    regex = '''(?:apideck).{0,40}\b([a-z0-9A-Z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apiflash - 1_40"
+    description = '''Apiflash - 1'''
+    regex = '''(?:apiflash).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apiflash - 2_41"
+    description = '''Apiflash - 2'''
+    regex = '''(?:apiflash).{0,40}\b([a-zA-Z0-9\S]{21,30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apifonica_42"
+    description = '''Apifonica'''
+    regex = '''(?:apifonica).{0,40}\b([0-9a-z]{11}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apify_43"
+    description = '''Apify'''
+    regex = '''\b(apify\_api\_[a-zA-Z-0-9]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apimatic - 1_44"
+    description = '''Apimatic - 1'''
+    regex = '''(?:apimatic).{0,40}\b([a-z0-9-\S]{8,32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apimatic - 2_45"
+    description = '''Apimatic - 2'''
+    regex = '''(?:apimatic).{0,40}\b([a-zA-Z0-9]{3,20}@[a-zA-Z0-9]{2,12}.[a-zA-Z0-9]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apiscience_46"
+    description = '''Apiscience'''
+    regex = '''(?:apiscience).{0,40}\b([a-bA-Z0-9\S]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apollo_47"
+    description = '''Apollo'''
+    regex = '''(?:apollo).{0,40}\b([a-zA-Z0-9]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Appcues - 1_48"
+    description = '''Appcues - 1'''
+    regex = '''(?:appcues).{0,40}\b([0-9]{5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Appcues - 2_49"
+    description = '''Appcues - 2'''
+    regex = '''(?:appcues).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Appcues - 3_50"
+    description = '''Appcues - 3'''
+    regex = '''(?:appcues).{0,40}\b([a-z0-9-]{39})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Appfollow_51"
+    description = '''Appfollow'''
+    regex = '''(?:appfollow).{0,40}\b([0-9A-Za-z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Appsynergy_52"
+    description = '''Appsynergy'''
+    regex = '''(?:appsynergy).{0,40}\b([a-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apptivo - 1_53"
+    description = '''Apptivo - 1'''
+    regex = '''(?:apptivo).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Apptivo - 2_54"
+    description = '''Apptivo - 2'''
+    regex = '''(?:apptivo).{0,40}\b([a-zA-Z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Artifactory - 2_55"
+    description = '''Artifactory - 2'''
+    regex = '''\b([A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])\.jfrog\.io)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Artsy - 1_56"
+    description = '''Artsy - 1'''
+    regex = '''(?:artsy).{0,40}\b([0-9a-zA-Z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Artsy - 2_57"
+    description = '''Artsy - 2'''
+    regex = '''(?:artsy).{0,40}\b([0-9a-zA-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Asanaoauth_58"
+    description = '''Asanaoauth'''
+    regex = '''(?:asana).{0,40}\b([a-z\/:0-9]{51})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Asanapersonalaccesstoken_59"
+    description = '''Asanapersonalaccesstoken'''
+    regex = '''(?:asana).{0,40}\b([0-9]{1,}\/[0-9]{16,}:[A-Za-z0-9]{32,})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Assemblyai_60"
+    description = '''Assemblyai'''
+    regex = '''(?:assemblyai).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Asymmetric Private Key_61"
+    description = '''Asymmetric Private Key'''
+    regex = '''-----BEGIN ((EC|PGP|DSA|RSA|OPENSSH) )?PRIVATE KEY( BLOCK)?-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Audd_62"
+    description = '''Audd'''
+    regex = '''(?:audd).{0,40}\b([a-z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Auth0managementapitoken_63"
+    description = '''Auth0managementapitoken'''
+    regex = '''(?:auth0).{0,40}\b(ey[a-zA-Z0-9._-]+)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Autodesk - 1_64"
+    description = '''Autodesk - 1'''
+    regex = '''(?:autodesk).{0,40}\b([0-9A-Za-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Autodesk - 2_65"
+    description = '''Autodesk - 2'''
+    regex = '''(?:autodesk).{0,40}\b([0-9A-Za-z]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Autoklose_66"
+    description = '''Autoklose'''
+    regex = '''(?:autoklose).{0,40}\b([a-zA-Z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Autopilot_67"
+    description = '''Autopilot'''
+    regex = '''(?:autopilot).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Avazapersonalaccesstoken_68"
+    description = '''Avazapersonalaccesstoken'''
+    regex = '''(?:avaza).{0,40}\b([0-9]+-[0-9a-f]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Aviationstack_69"
+    description = '''Aviationstack'''
+    regex = '''(?:aviationstack).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Aws - 1_70"
+    description = '''Aws - 1'''
+    regex = '''\b((?:AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Axonaut_71"
+    description = '''Axonaut'''
+    regex = '''(?:axonaut).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Aylien - 1_72"
+    description = '''Aylien - 1'''
+    regex = '''(?:aylien).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Aylien - 2_73"
+    description = '''Aylien - 2'''
+    regex = '''(?:aylien).{0,40}\b([a-z0-9]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ayrshare_74"
+    description = '''Ayrshare'''
+    regex = '''(?:ayrshare).{0,40}\b([A-Z]{7}-[A-Z0-9]{7}-[A-Z0-9]{7}-[A-Z0-9]{7})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bannerbear_75"
+    description = '''Bannerbear'''
+    regex = '''(?:bannerbear).{0,40}\b([0-9a-zA-Z]{22}tt)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Baremetrics_76"
+    description = '''Baremetrics'''
+    regex = '''(?:baremetrics).{0,40}\b([a-zA-Z0-9_]{25})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Baseapiio_77"
+    description = '''Baseapiio'''
+    regex = '''(?:baseapi|base-api).{0,40}\b([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Beamer_78"
+    description = '''Beamer'''
+    regex = '''(?:beamer).{0,40}\b([a-zA-Z0-9_+/]{45}=)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Beebole_79"
+    description = '''Beebole'''
+    regex = '''(?:beebole).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Besttime_80"
+    description = '''Besttime'''
+    regex = '''(?:besttime).{0,40}\b([0-9A-Za-z_]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Billomat - 1_81"
+    description = '''Billomat - 1'''
+    regex = '''(?:billomat).{0,40}\b([0-9a-z]{1,})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Billomat - 2_82"
+    description = '''Billomat - 2'''
+    regex = '''(?:billomat).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bitbar_83"
+    description = '''Bitbar'''
+    regex = '''(?:bitbar).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bitcoinaverage_84"
+    description = '''Bitcoinaverage'''
+    regex = '''(?:bitcoinaverage).{0,40}\b([a-zA-Z0-9]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bitfinex_85"
+    description = '''Bitfinex'''
+    regex = '''(?:bitfinex).{0,40}\b([A-Za-z0-9_-]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bitly Secret Key_86"
+    description = '''Bitly Secret Key'''
+    regex = '''R_[0-9a-f]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bitlyaccesstoken_87"
+    description = '''Bitlyaccesstoken'''
+    regex = '''(?:bitly).{0,40}\b([a-zA-Z-0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bitmex - 1_88"
+    description = '''Bitmex - 1'''
+    regex = '''(?:bitmex).{0,40}([ \r\n]{1}[0-9a-zA-Z\-\_]{24}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bitmex - 2_89"
+    description = '''Bitmex - 2'''
+    regex = '''(?:bitmex).{0,40}([ \r\n]{1}[0-9a-zA-Z\-\_]{48}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Blablabus_90"
+    description = '''Blablabus'''
+    regex = '''(?:blablabus).{0,40}\b([0-9A-Za-z]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Blazemeter_91"
+    description = '''Blazemeter'''
+    regex = '''(?:blazemeter|runscope).{0,40}\b([0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Blitapp_92"
+    description = '''Blitapp'''
+    regex = '''(?:blitapp).{0,40}\b([a-zA-Z0-9_-]{39})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bombbomb_93"
+    description = '''Bombbomb'''
+    regex = '''(?:bombbomb).{0,40}\b([a-zA-Z0-9-._]{704})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Boostnote_94"
+    description = '''Boostnote'''
+    regex = '''(?:boostnote).{0,40}\b([0-9a-f]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Borgbase_95"
+    description = '''Borgbase'''
+    regex = '''(?:borgbase).{0,40}\b([a-zA-Z0-9/_.-]{148,152})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Braintree API Key_96"
+    description = '''Braintree API Key'''
+    regex = '''access_token$production$[0-9a-z]{16}$[0-9a-f]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Brandfetch_97"
+    description = '''Brandfetch'''
+    regex = '''(?:brandfetch).{0,40}\b([0-9A-Za-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Browshot_98"
+    description = '''Browshot'''
+    regex = '''(?:browshot).{0,40}\b([a-zA-Z-0-9]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Buddyns_99"
+    description = '''Buddyns'''
+    regex = '''(?:buddyns).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bugherd_100"
+    description = '''Bugherd'''
+    regex = '''(?:bugherd).{0,40}\b([0-9a-z]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bugsnag_101"
+    description = '''Bugsnag'''
+    regex = '''(?:bugsnag).{0,40}\b([0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Buildkite_102"
+    description = '''Buildkite'''
+    regex = '''(?:buildkite).{0,40}\b([a-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Bulbul_103"
+    description = '''Bulbul'''
+    regex = '''(?:bulbul).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Buttercms_104"
+    description = '''Buttercms'''
+    regex = '''(?:buttercms).{0,40}\b([a-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Caflou_105"
+    description = '''Caflou'''
+    regex = '''(?:caflou).{0,40}\b([a-bA-Z0-9\S]{155})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Calendarific_106"
+    description = '''Calendarific'''
+    regex = '''(?:calendarific).{0,40}\b([a-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Calendlyapikey_107"
+    description = '''Calendlyapikey'''
+    regex = '''(?:calendly).{0,40}\b([a-zA-Z-0-9]{20}.[a-zA-Z-0-9]{171}.[a-zA-Z-0-9_]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Calorieninja_108"
+    description = '''Calorieninja'''
+    regex = '''(?:calorieninja).{0,40}\b([0-9A-Za-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Campayn_109"
+    description = '''Campayn'''
+    regex = '''(?:campayn).{0,40}\b([a-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cannyio_110"
+    description = '''Cannyio'''
+    regex = '''(?:canny).{0,40}\b([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[0-9]{4}-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Capsulecrm_111"
+    description = '''Capsulecrm'''
+    regex = '''(?:capsulecrm).{0,40}\b([a-zA-Z0-9-._+=]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Captaindata - 1_112"
+    description = '''Captaindata - 1'''
+    regex = '''(?:captaindata).{0,40}\b([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Captaindata - 2_113"
+    description = '''Captaindata - 2'''
+    regex = '''(?:captaindata).{0,40}\b([0-9a-f]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Carboninterface_114"
+    description = '''Carboninterface'''
+    regex = '''(?:carboninterface).{0,40}\b([a-zA-Z0-9]{21})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cashboard - 1_115"
+    description = '''Cashboard - 1'''
+    regex = '''(?:cashboard).{0,40}\b([0-9A-Z]{3}-[0-9A-Z]{3}-[0-9A-Z]{3}-[0-9A-Z]{3})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cashboard - 2_116"
+    description = '''Cashboard - 2'''
+    regex = '''(?:cashboard).{0,40}\b([0-9a-z]{1,})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Caspio - 1_117"
+    description = '''Caspio - 1'''
+    regex = '''(?:caspio).{0,40}\b([a-z0-9]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Caspio - 2_118"
+    description = '''Caspio - 2'''
+    regex = '''(?:caspio).{0,40}\b([a-z0-9]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Censys - 1_119"
+    description = '''Censys - 1'''
+    regex = '''(?:censys).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Censys - 2_120"
+    description = '''Censys - 2'''
+    regex = '''(?:censys).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Centralstationcrm_121"
+    description = '''Centralstationcrm'''
+    regex = '''(?:centralstation).{0,40}\b([a-z0-9]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cexio - 1_122"
+    description = '''Cexio - 1'''
+    regex = '''(?:cexio|cex.io).{0,40}\b([a-z]{2}[0-9]{9})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cexio - 2_123"
+    description = '''Cexio - 2'''
+    regex = '''(?:cexio|cex.io).{0,40}\b([0-9A-Za-z]{24,27})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Chatbot_124"
+    description = '''Chatbot'''
+    regex = '''(?:chatbot).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Chatfule_125"
+    description = '''Chatfule'''
+    regex = '''(?:chatfuel).{0,40}\b([a-zA-Z0-9]{128})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Checio_126"
+    description = '''Checio'''
+    regex = '''(?:checio).{0,40}\b(pk_[a-z0-9]{45})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Checklyhq_127"
+    description = '''Checklyhq'''
+    regex = '''(?:checklyhq).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Checkout - 1_128"
+    description = '''Checkout - 1'''
+    regex = '''(?:checkout).{0,40}\b((sk_|sk_test_)[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Checkout - 2_129"
+    description = '''Checkout - 2'''
+    regex = '''(?:checkout).{0,40}\b(cus_[0-9a-zA-Z]{26})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Checkvist - 1_130"
+    description = '''Checkvist - 1'''
+    regex = '''(?:checkvist).{0,40}\b([\w\.-]+@[\w-]+\.[\w\.-]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Checkvist - 2_131"
+    description = '''Checkvist - 2'''
+    regex = '''(?:checkvist).{0,40}\b([0-9a-zA-Z]{14})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cicero_132"
+    description = '''Cicero'''
+    regex = '''(?:cicero).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clearbit_133"
+    description = '''Clearbit'''
+    regex = '''(?:clearbit).{0,40}\b([0-9a-z_]{35})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clickhelp - 1_134"
+    description = '''Clickhelp - 1'''
+    regex = '''\b([0-9A-Za-z]{3,20}.try.clickhelp.co)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clickhelp - 2_135"
+    description = '''Clickhelp - 2'''
+    regex = '''(?:clickhelp).{0,40}\b([0-9A-Za-z]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clicksendsms - 2_136"
+    description = '''Clicksendsms - 2'''
+    regex = '''(?:sms).{0,40}\b([a-zA-Z0-9]{3,20}@[a-zA-Z0-9]{2,12}.[a-zA-Z0-9]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clickuppersonaltoken_137"
+    description = '''Clickuppersonaltoken'''
+    regex = '''(?:clickup).{0,40}\b(pk_[0-9]{8}_[0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cliengo_138"
+    description = '''Cliengo'''
+    regex = '''(?:cliengo).{0,40}\b([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clinchpad_139"
+    description = '''Clinchpad'''
+    regex = '''(?:clinchpad).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clockify_140"
+    description = '''Clockify'''
+    regex = '''(?:clockify).{0,40}\b([a-zA-Z0-9]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clockworksms - 1_141"
+    description = '''Clockworksms - 1'''
+    regex = '''(?:clockwork|textanywhere).{0,40}\b([0-9a-zA-Z]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clockworksms - 2_142"
+    description = '''Clockworksms - 2'''
+    regex = '''(?:clockwork|textanywhere).{0,40}\b([0-9]{5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Closecrm_143"
+    description = '''Closecrm'''
+    regex = '''\b(api_[a-z0-9A-Z.]{45})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloudelements - 1_144"
+    description = '''Cloudelements - 1'''
+    regex = '''(?:cloudelements).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloudelements - 2_145"
+    description = '''Cloudelements - 2'''
+    regex = '''(?:cloudelements).{0,40}\b([a-zA-Z0-9]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloudflarecakey_146"
+    description = '''Cloudflarecakey'''
+    regex = '''(?:cloudflare).{0,40}\b(v[A-Za-z0-9._-]{173,})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloudimage_147"
+    description = '''Cloudimage'''
+    regex = '''(?:cloudimage).{0,40}\b([a-z0-9_]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloudinary Credentials_148"
+    description = '''Cloudinary Credentials'''
+    regex = '''cloudinary://[0-9]+:[A-Za-z0-9\-_\.]+@[A-Za-z0-9\-_\.]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloudmersive_149"
+    description = '''Cloudmersive'''
+    regex = '''(?:cloudmersive).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloudplan_150"
+    description = '''Cloudplan'''
+    regex = '''(?:cloudplan).{0,40}\b([A-Z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloverly_151"
+    description = '''Cloverly'''
+    regex = '''(?:cloverly).{0,40}\b([a-z0-9:_]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloze - 1_152"
+    description = '''Cloze - 1'''
+    regex = '''(?:cloze).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cloze - 2_153"
+    description = '''Cloze - 2'''
+    regex = '''(?:cloze).{0,40}\b([\w\.-]+@[\w-]+\.[\w\.-]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Clustdoc_154"
+    description = '''Clustdoc'''
+    regex = '''(?:clustdoc).{0,40}\b([0-9a-zA-Z]{60})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Codacy_155"
+    description = '''Codacy'''
+    regex = '''(?:codacy).{0,40}\b([0-9A-Za-z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Coinapi_156"
+    description = '''Coinapi'''
+    regex = '''(?:coinapi).{0,40}\b([A-Z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Coinbase_157"
+    description = '''Coinbase'''
+    regex = '''(?:coinbase).{0,40}\b([a-zA-Z-0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Coinlayer_158"
+    description = '''Coinlayer'''
+    regex = '''(?:coinlayer).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Coinlib_159"
+    description = '''Coinlib'''
+    regex = '''(?:coinlib).{0,40}\b([a-z0-9]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Column_160"
+    description = '''Column'''
+    regex = '''(?:column).{0,40}\b((?:test|live)_[a-zA-Z0-9]{27})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Commercejs_161"
+    description = '''Commercejs'''
+    regex = '''(?:commercejs).{0,40}\b([a-z0-9_]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Commodities_162"
+    description = '''Commodities'''
+    regex = '''(?:commodities).{0,40}\b([a-zA-Z0-9]{60})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Companyhub - 1_163"
+    description = '''Companyhub - 1'''
+    regex = '''(?:companyhub).{0,40}\b([0-9a-zA-Z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Companyhub - 2_164"
+    description = '''Companyhub - 2'''
+    regex = '''(?:companyhub).{0,40}\b([a-zA-Z0-9$%^=-]{4,32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Confluent - 1_165"
+    description = '''Confluent - 1'''
+    regex = '''(?:confluent).{0,40}\b([a-zA-Z-0-9]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Confluent - 2_166"
+    description = '''Confluent - 2'''
+    regex = '''(?:confluent).{0,40}\b([a-zA-Z-0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Convertkit_167"
+    description = '''Convertkit'''
+    regex = '''(?:convertkit).{0,40}\b([a-z0-9A-Z_]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Convier_168"
+    description = '''Convier'''
+    regex = '''(?:convier).{0,40}\b([0-9]{2}\|[a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Copper - 2_169"
+    description = '''Copper - 2'''
+    regex = '''(?:copper).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Countrylayer_170"
+    description = '''Countrylayer'''
+    regex = '''(?:countrylayer).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Courier_171"
+    description = '''Courier'''
+    regex = '''(?:courier).{0,40}\b(pk\_[a-zA-Z0-9]{1,}\_[a-zA-Z0-9]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Coveralls_172"
+    description = '''Coveralls'''
+    regex = '''(?:coveralls).{0,40}\b([a-zA-Z0-9-]{37})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Crowdin_173"
+    description = '''Crowdin'''
+    regex = '''(?:crowdin).{0,40}\b([0-9A-Za-z]{80})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Cryptocompare_174"
+    description = '''Cryptocompare'''
+    regex = '''(?:cryptocompare).{0,40}\b([a-z-0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Currencycloud - 1_175"
+    description = '''Currencycloud - 1'''
+    regex = '''(?:currencycloud).{0,40}\b([0-9a-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Currencyfreaks_176"
+    description = '''Currencyfreaks'''
+    regex = '''(?:currencyfreaks).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Currencylayer_177"
+    description = '''Currencylayer'''
+    regex = '''(?:currencylayer).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Currencyscoop_178"
+    description = '''Currencyscoop'''
+    regex = '''(?:currencyscoop).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Currentsapi_179"
+    description = '''Currentsapi'''
+    regex = '''(?:currentsapi).{0,40}\b([a-zA-Z0-9\S]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Customerguru - 1_180"
+    description = '''Customerguru - 1'''
+    regex = '''(?:guru).{0,40}\b([a-z0-9A-Z]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Customerguru - 2_181"
+    description = '''Customerguru - 2'''
+    regex = '''(?:guru).{0,40}\b([a-z0-9A-Z]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "D7network_182"
+    description = '''D7network'''
+    regex = '''(?:d7network).{0,40}\b([a-zA-Z0-9\W\S]{23}\=)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dailyco_183"
+    description = '''Dailyco'''
+    regex = '''(?:daily).{0,40}\b([0-9a-f]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dandelion_184"
+    description = '''Dandelion'''
+    regex = '''(?:dandelion).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Databricks_185"
+    description = '''Databricks'''
+    regex = '''dapi[a-f0-9]{32}\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Datafire_186"
+    description = '''Datafire'''
+    regex = '''(?:datafire).{0,40}\b([a-z0-9\S]{175,190})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Datagov_187"
+    description = '''Datagov'''
+    regex = '''(?:data.gov).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Deepai_188"
+    description = '''Deepai'''
+    regex = '''(?:deepai).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Deepgram_189"
+    description = '''Deepgram'''
+    regex = '''(?:deepgram).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Delighted_190"
+    description = '''Delighted'''
+    regex = '''(?:delighted).{0,40}\b([a-z0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Deputy - 1_191"
+    description = '''Deputy - 1'''
+    regex = '''\b([0-9a-z]{1,}.as.deputy.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Deputy - 2_192"
+    description = '''Deputy - 2'''
+    regex = '''(?:deputy).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Detectlanguage_193"
+    description = '''Detectlanguage'''
+    regex = '''(?:detectlanguage).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dfuse_194"
+    description = '''Dfuse'''
+    regex = '''\b(web\_[0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Diffbot_195"
+    description = '''Diffbot'''
+    regex = '''(?:diffbot).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Digitaloceantoken_196"
+    description = '''Digitaloceantoken'''
+    regex = '''(?:digitalocean).{0,40}\b([A-Za-z0-9_-]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Discord Webhook_197"
+    description = '''Discord Webhook'''
+    regex = '''https://discordapp\.com/api/webhooks/[0-9]+/[A-Za-z0-9\-]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Discordbottoken - 1_198"
+    description = '''Discordbottoken - 1'''
+    regex = '''(?:discord).{0,40}\b([A-Za-z0-9_-]{24}\.[A-Za-z0-9_-]{6}\.[A-Za-z0-9_-]{27})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Discordbottoken - 2_199"
+    description = '''Discordbottoken - 2'''
+    regex = '''(?:discord).{0,40}\b([0-9]{17})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Discordwebhook_200"
+    description = '''Discordwebhook'''
+    regex = '''(https:\/\/discord.com\/api\/webhooks\/[0-9]{18}\/[0-9a-zA-Z-]{68})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ditto_201"
+    description = '''Ditto'''
+    regex = '''(?:ditto).{0,40}\b([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12}\.[a-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dnscheck - 1_202"
+    description = '''Dnscheck - 1'''
+    regex = '''(?:dnscheck).{0,40}\b([a-z0-9A-Z-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dnscheck - 2_203"
+    description = '''Dnscheck - 2'''
+    regex = '''(?:dnscheck).{0,40}\b([a-z0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Documo_204"
+    description = '''Documo'''
+    regex = '''\b(ey[a-zA-Z0-9]{34}.ey[a-zA-Z0-9]{154}.[a-zA-Z0-9_-]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Doppler_205"
+    description = '''Doppler'''
+    regex = '''\b(dp\.pt\.[a-zA-Z0-9]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dotmailer - 1_206"
+    description = '''Dotmailer - 1'''
+    regex = '''(?:dotmailer).{0,40}\b(apiuser-[a-z0-9]{12}@apiconnector.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dotmailer - 2_207"
+    description = '''Dotmailer - 2'''
+    regex = '''(?:dotmailer).{0,40}\b([a-zA-Z0-9\S]{8,24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dovico_208"
+    description = '''Dovico'''
+    regex = '''(?:dovico).{0,40}\b([0-9a-z]{32}\.[0-9a-z]{1,}\b)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dronahq_209"
+    description = '''Dronahq'''
+    regex = '''(?:dronahq).{0,40}\b([a-z0-9]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Droneci_210"
+    description = '''Droneci'''
+    regex = '''(?:droneci).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dropbox_211"
+    description = '''Dropbox'''
+    regex = '''\b(sl\.[A-Za-z0-9\-\_]{130,140})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dwolla_212"
+    description = '''Dwolla'''
+    regex = '''(?:dwolla).{0,40}\b([a-zA-Z-0-9]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dynalist_213"
+    description = '''Dynalist'''
+    regex = '''(?:dynalist).{0,40}\b([a-zA-Z0-9-_]{128})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dynatrace token_214"
+    description = '''Dynatrace token'''
+    regex = '''dt0[a-zA-Z]{1}[0-9]{2}\.[A-Z0-9]{24}\.[A-Z0-9]{64}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Dyspatch_215"
+    description = '''Dyspatch'''
+    regex = '''(?:dyspatch).{0,40}\b([A-Z0-9]{52})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "EC_216"
+    description = '''EC'''
+    regex = '''-----BEGIN EC PRIVATE KEY-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Eagleeyenetworks - 1_217"
+    description = '''Eagleeyenetworks - 1'''
+    regex = '''(?:eagleeyenetworks).{0,40}\b([a-zA-Z0-9]{3,20}@[a-zA-Z0-9]{2,12}.[a-zA-Z0-9]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Eagleeyenetworks - 2_218"
+    description = '''Eagleeyenetworks - 2'''
+    regex = '''(?:eagleeyenetworks).{0,40}\b([a-zA-Z0-9]{15})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Easyinsight - 1_219"
+    description = '''Easyinsight - 1'''
+    regex = '''(?:easyinsight|easy-insight).{0,40}\b([a-zA-Z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Easyinsight - 2_220"
+    description = '''Easyinsight - 2'''
+    regex = '''(?:easyinsight|easy-insight).{0,40}\b([0-9Aa-zA-Z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Edamam - 1_221"
+    description = '''Edamam - 1'''
+    regex = '''(?:edamam).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Edamam - 2_222"
+    description = '''Edamam - 2'''
+    regex = '''(?:edamam).{0,40}\b([0-9a-z]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Edenai_223"
+    description = '''Edenai'''
+    regex = '''(?:edenai).{0,40}\b([a-zA-Z0-9]{36}.[a-zA-Z0-9]{92}.[a-zA-Z0-9_]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Eightxeight - 2_224"
+    description = '''Eightxeight - 2'''
+    regex = '''(?:8x8).{0,40}\b([a-zA-Z0-9]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Elasticemail_225"
+    description = '''Elasticemail'''
+    regex = '''(?:elastic).{0,40}\b([A-Za-z0-9_-]{96})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Enablex - 1_226"
+    description = '''Enablex - 1'''
+    regex = '''(?:enablex).{0,40}\b([a-zA-Z0-9]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Enablex - 2_227"
+    description = '''Enablex - 2'''
+    regex = '''(?:enablex).{0,40}\b([a-z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Enigma_228"
+    description = '''Enigma'''
+    regex = '''(?:enigma).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ethplorer_229"
+    description = '''Ethplorer'''
+    regex = '''(?:ethplorer).{0,40}\b([a-z0-9A-Z-]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Everhour_230"
+    description = '''Everhour'''
+    regex = '''(?:everhour).{0,40}\b([0-9Aa-f]{4}-[0-9a-f]{4}-[0-9a-f]{6}-[0-9a-f]{6}-[0-9a-f]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Exchangerateapi_231"
+    description = '''Exchangerateapi'''
+    regex = '''(?:exchangerate).{0,40}\b([a-z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Exchangeratesapi_232"
+    description = '''Exchangeratesapi'''
+    regex = '''(?:exchangerates).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Facebook Access Token_233"
+    description = '''Facebook Access Token'''
+    regex = '''EAACEdEose0cBA[0-9A-Za-z]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Faceplusplus_234"
+    description = '''Faceplusplus'''
+    regex = '''(?:faceplusplus).{0,40}\b([0-9a-zA-Z_-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fakejson_235"
+    description = '''Fakejson'''
+    regex = '''(?:fakejson).{0,40}\b([a-zA-Z0-9]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fastforex_236"
+    description = '''Fastforex'''
+    regex = '''(?:fastforex).{0,40}\b([a-z0-9-]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fastlypersonaltoken_237"
+    description = '''Fastlypersonaltoken'''
+    regex = '''(?:fastly).{0,40}\b([A-Za-z0-9_-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Feedier_238"
+    description = '''Feedier'''
+    regex = '''(?:feedier).{0,40}\b([a-z0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fetchrss_239"
+    description = '''Fetchrss'''
+    regex = '''(?:fetchrss).{0,40}\b([0-9A-Za-z.]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Figmapersonalaccesstoken_240"
+    description = '''Figmapersonalaccesstoken'''
+    regex = '''(?:figma).{0,40}\b([0-9]{6}-[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fileio_241"
+    description = '''Fileio'''
+    regex = '''(?:fileio).{0,40}\b([A-Z0-9.-]{39})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Finage_242"
+    description = '''Finage'''
+    regex = '''\b(API_KEY[0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic_API_Key"
+    description = '''Detect API keys with "API_KEY" in the name and their values'''
+    regex = '''\b(\w*API_KEY\w*)\s*=\s*([a-zA-Z0-9_\-]+)\b'''
+    tags = ["secret","key"]
+
+[[rules]]   
+    ID = "Financialmodelingprep_243"
+    description = '''Financialmodelingprep'''
+    regex = '''(?:financialmodelingprep).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Findl_244"
+    description = '''Findl'''
+    regex = '''(?:findl).{0,40}\b([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Finnhub_245"
+    description = '''Finnhub'''
+    regex = '''(?:finnhub).{0,40}\b([0-9a-z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fixerio_246"
+    description = '''Fixerio'''
+    regex = '''(?:fixer).{0,40}\b([A-Za-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Flatio_247"
+    description = '''Flatio'''
+    regex = '''(?:flat).{0,40}\b([0-9a-z]{128})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fleetbase_248"
+    description = '''Fleetbase'''
+    regex = '''\b(flb_live_[0-9a-zA-Z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Flickr_249"
+    description = '''Flickr'''
+    regex = '''(?:flickr).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Flightapi_250"
+    description = '''Flightapi'''
+    regex = '''(?:flightapi).{0,40}\b([a-z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Flightstats - 1_251"
+    description = '''Flightstats - 1'''
+    regex = '''(?:flightstats).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Flightstats - 2_252"
+    description = '''Flightstats - 2'''
+    regex = '''(?:flightstats).{0,40}\b([0-9a-z]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Flowflu - 2_253"
+    description = '''Flowflu - 2'''
+    regex = '''(?:flowflu).{0,40}\b([a-zA-Z0-9]{51})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Flutterwave_254"
+    description = '''Flutterwave'''
+    regex = '''\b(FLWSECK-[0-9a-z]{32}-X)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fmfw - 1_255"
+    description = '''Fmfw - 1'''
+    regex = '''(?:fmfw).{0,40}\b([a-zA-Z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fmfw - 2_256"
+    description = '''Fmfw - 2'''
+    regex = '''(?:fmfw).{0,40}\b([a-zA-Z0-9_-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Formbucket_257"
+    description = '''Formbucket'''
+    regex = '''(?:formbucket).{0,40}\b([0-9A-Za-z]{1,}.[0-9A-Za-z]{1,}\.[0-9A-Z-a-z\-_]{1,})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Formio_258"
+    description = '''Formio'''
+    regex = '''(?:formio).{0,40}\b(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[0-9A-Za-z]{310}\.[0-9A-Z-a-z\-_]{43}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Foursquare_259"
+    description = '''Foursquare'''
+    regex = '''(?:foursquare).{0,40}\b([0-9A-Z]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Frameio_260"
+    description = '''Frameio'''
+    regex = '''\b(fio-u-[0-9a-zA-Z_-]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Freshbooks - 1_261"
+    description = '''Freshbooks - 1'''
+    regex = '''(?:freshbooks).{0,40}\b([0-9a-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Freshbooks - 2_262"
+    description = '''Freshbooks - 2'''
+    regex = '''(?:freshbooks).{0,40}\b(https://www.[0-9A-Za-z_-]{1,}.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Freshdesk - 1_263"
+    description = '''Freshdesk - 1'''
+    regex = '''(?:freshdesk).{0,40}\b([0-9A-Za-z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Freshdesk - 2_264"
+    description = '''Freshdesk - 2'''
+    regex = '''\b([0-9a-z-]{1,}.freshdesk.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Front_265"
+    description = '''Front'''
+    regex = '''(?:front).{0,40}\b([0-9a-zA-Z]{36}.[0-9a-zA-Z\.\-\_]{188,244})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fulcrum_266"
+    description = '''Fulcrum'''
+    regex = '''(?:fulcrum).{0,40}\b([a-z0-9]{80})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fullstory_267"
+    description = '''Fullstory'''
+    regex = '''(?:fullstory).{0,40}\b([a-zA-Z-0-9/+]{88})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fusebill_268"
+    description = '''Fusebill'''
+    regex = '''(?:fusebill).{0,40}\b([a-zA-Z0-9]{88})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Fxmarket_269"
+    description = '''Fxmarket'''
+    regex = '''(?:fxmarket).{0,40}\b([0-9Aa-zA-Z-_=]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gcp_270"
+    description = '''Gcp'''
+    regex = '''\{[^{]+auth_provider_x509_cert_url[^}]+\}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Geckoboard_271"
+    description = '''Geckoboard'''
+    regex = '''(?:geckoboard).{0,40}\b([a-zA-Z0-9]{44})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1376_272"
+    description = '''Generic - 1376'''
+    regex = '''jdbc:mysql(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1700_273"
+    description = '''Generic - 1700'''
+    regex = '''BEGIN OPENSSH PRIVATE KEY'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1701_274"
+    description = '''Generic - 1701'''
+    regex = '''BEGIN PRIVATE KEY'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1702_275"
+    description = '''Generic - 1702'''
+    regex = '''BEGIN RSA PRIVATE KEY'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1703_276"
+    description = '''Generic - 1703'''
+    regex = '''BEGIN DSA PRIVATE KEY'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1704_277"
+    description = '''Generic - 1704'''
+    regex = '''BEGIN EC PRIVATE KEY'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1705_278"
+    description = '''Generic - 1705'''
+    regex = '''BEGIN PGP PRIVATE KEY BLOCK'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1710_279"
+    description = '''Generic - 1710'''
+    regex = '''algolia_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1711_280"
+    description = '''Generic - 1711'''
+    regex = '''asana_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1713_281"
+    description = '''Generic - 1713'''
+    regex = '''azure_tenant'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1714_282"
+    description = '''Generic - 1714'''
+    regex = '''bitly_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1716_283"
+    description = '''Generic - 1716'''
+    regex = '''browserstack_access_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1717_284"
+    description = '''Generic - 1717'''
+    regex = '''buildkite_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1718_285"
+    description = '''Generic - 1718'''
+    regex = '''comcast_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1719_286"
+    description = '''Generic - 1719'''
+    regex = '''datadog_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1720_287"
+    description = '''Generic - 1720'''
+    regex = '''deviantart_secret'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1721_288"
+    description = '''Generic - 1721'''
+    regex = '''deviantart_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1722_289"
+    description = '''Generic - 1722'''
+    regex = '''dropbox_api_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1723_290"
+    description = '''Generic - 1723'''
+    regex = '''facebook_appsecret'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1724_291"
+    description = '''Generic - 1724'''
+    regex = '''facebook_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1725_292"
+    description = '''Generic - 1725'''
+    regex = '''firebase_custom_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1726_293"
+    description = '''Generic - 1726'''
+    regex = '''firebase_id_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1727_294"
+    description = '''Generic - 1727'''
+    regex = '''github_client'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1728_295"
+    description = '''Generic - 1728'''
+    regex = '''github_ssh_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1730_296"
+    description = '''Generic - 1730'''
+    regex = '''gitlab_private_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1733_297"
+    description = '''Generic - 1733'''
+    regex = '''heroku_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1734_298"
+    description = '''Generic - 1734'''
+    regex = '''instagram_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1735_299"
+    description = '''Generic - 1735'''
+    regex = '''mailchimp_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1736_300"
+    description = '''Generic - 1736'''
+    regex = '''mailgun_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1739_301"
+    description = '''Generic - 1739'''
+    regex = '''pagerduty_api_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1740_302"
+    description = '''Generic - 1740'''
+    regex = '''paypal_key_sb'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1741_303"
+    description = '''Generic - 1741'''
+    regex = '''paypal_key_live'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1742_304"
+    description = '''Generic - 1742'''
+    regex = '''paypal_token_sb'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1743_305"
+    description = '''Generic - 1743'''
+    regex = '''paypal_token_live'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1744_306"
+    description = '''Generic - 1744'''
+    regex = '''pendo_integration_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1745_307"
+    description = '''Generic - 1745'''
+    regex = '''salesforce_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1746_308"
+    description = '''Generic - 1746'''
+    regex = '''saucelabs_ukey'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1747_309"
+    description = '''Generic - 1747'''
+    regex = '''sendgrid_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1748_310"
+    description = '''Generic - 1748'''
+    regex = '''slack_api_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1751_311"
+    description = '''Generic - 1751'''
+    regex = '''square_auth_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1752_312"
+    description = '''Generic - 1752'''
+    regex = '''travisci_api_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1754_313"
+    description = '''Generic - 1754'''
+    regex = '''twitter_api_secret'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1755_314"
+    description = '''Generic - 1755'''
+    regex = '''twitter_bearer_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1756_315"
+    description = '''Generic - 1756'''
+    regex = '''spotify_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1757_316"
+    description = '''Generic - 1757'''
+    regex = '''stripe_key_live'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1758_317"
+    description = '''Generic - 1758'''
+    regex = '''wakatime_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1759_318"
+    description = '''Generic - 1759'''
+    regex = '''wompi_auth_bearer_sb'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1760_319"
+    description = '''Generic - 1760'''
+    regex = '''wompi_auth_bearer_live'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1761_320"
+    description = '''Generic - 1761'''
+    regex = '''wpengine_api_key'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1763_321"
+    description = '''Generic - 1763'''
+    regex = '''zendesk_access_token'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Generic - 1764_322"
+    description = '''Generic - 1764'''
+    regex = '''ssh-rsa'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gengo_323"
+    description = '''Gengo'''
+    regex = '''(?:gengo).{0,40}([ ]{0,1}[0-9a-zA-Z\[\]\-\(\)\{\}|_^@$=~]{64}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Geoapify_324"
+    description = '''Geoapify'''
+    regex = '''(?:geoapify).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Geocode_325"
+    description = '''Geocode'''
+    regex = '''(?:geocode).{0,40}\b([a-z0-9]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Geocodify_326"
+    description = '''Geocodify'''
+    regex = '''(?:geocodify).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Geocodio - 2_327"
+    description = '''Geocodio - 2'''
+    regex = '''(?:geocod).{0,40}\b([a-z0-9]{39})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Geoipifi_328"
+    description = '''Geoipifi'''
+    regex = '''(?:ipifi).{0,40}\b([a-z0-9A-Z_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Getemail_329"
+    description = '''Getemail'''
+    regex = '''(?:getemail).{0,40}\b([a-zA-Z0-9-]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Getemails - 1_330"
+    description = '''Getemails - 1'''
+    regex = '''(?:getemails).{0,40}\b([a-z0-9-]{26})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Getemails - 2_331"
+    description = '''Getemails - 2'''
+    regex = '''(?:getemails).{0,40}\b([a-z0-9-]{18})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Getgeoapi_332"
+    description = '''Getgeoapi'''
+    regex = '''(?:getgeoapi).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Getgist_333"
+    description = '''Getgist'''
+    regex = '''(?:getgist).{0,40}\b([a-z0-9A-Z+=]{68})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Getsandbox - 1_334"
+    description = '''Getsandbox - 1'''
+    regex = '''(?:getsandbox).{0,40}\b([a-z0-9-]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Getsandbox - 2_335"
+    description = '''Getsandbox - 2'''
+    regex = '''(?:getsandbox).{0,40}\b([a-z0-9-]{15,30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Github - 2_336"
+    description = '''Github - 2'''
+    regex = '''\b((?:ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,255}\b)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Github App Token_337"
+    description = '''Github App Token'''
+    regex = '''(ghu|ghs)_[0-9a-zA-Z]{36}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Github OAuth Access Token_338"
+    description = '''Github OAuth Access Token'''
+    regex = '''gho_[0-9a-zA-Z]{36}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Github Personal Access Token_339"
+    description = '''Github Personal Access Token'''
+    regex = '''ghp_[0-9a-zA-Z]{36}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Github Refresh Token_340"
+    description = '''Github Refresh Token'''
+    regex = '''ghr_[0-9a-zA-Z]{76}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Github_old_341"
+    description = '''Github_old'''
+    regex = '''(?:github)[^\.].{0,40}[ =:'"]+([a-f0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Githubapp - 2_342"
+    description = '''Githubapp - 2'''
+    regex = '''(?:github).{0,40}(-----BEGIN RSA PRIVATE KEY-----\s[A-Za-z0-9+\/\s]*\s-----END RSA PRIVATE KEY-----)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gitlabv2_343"
+    description = '''Gitlabv2'''
+    regex = '''\b(glpat-[a-zA-Z0-9\-=_]{20,22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gitter_344"
+    description = '''Gitter'''
+    regex = '''(?:gitter).{0,40}\b([a-z0-9-]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Glassnode_345"
+    description = '''Glassnode'''
+    regex = '''(?:glassnode).{0,40}\b([0-9A-Za-z]{27})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gocanvas - 1_346"
+    description = '''Gocanvas - 1'''
+    regex = '''(?:gocanvas).{0,40}\b([0-9A-Za-z/+]{43}=[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gocanvas - 2_347"
+    description = '''Gocanvas - 2'''
+    regex = '''(?:gocanvas).{0,40}\b([\w\.-]+@[\w-]+\.[\w\.-]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gocardless_348"
+    description = '''Gocardless'''
+    regex = '''\b(live_[0-9A-Za-z\_\-]{40}[ "'\r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Goodday_349"
+    description = '''Goodday'''
+    regex = '''(?:goodday).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Google (GCP) Service Account_350"
+    description = '''Google (GCP) Service Account'''
+    regex = '''"type": "service_account"'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Google API Key_351"
+    description = '''Google API Key'''
+    regex = '''AIza[0-9a-z-_]{35}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Google Calendar URI_352"
+    description = '''Google Calendar URI'''
+    regex = '''https://www\.google\.com/calendar/embed\?src=[A-Za-z0-9%@&;=\-_\./]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Google OAuth Access Token_353"
+    description = '''Google OAuth Access Token'''
+    regex = '''ya29\.[0-9A-Za-z\-_]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Graphcms - 1_354"
+    description = '''Graphcms - 1'''
+    regex = '''(?:graph).{0,40}\b([a-z0-9]{25})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Graphcms - 2_355"
+    description = '''Graphcms - 2'''
+    regex = '''\b(ey[a-zA-Z0-9]{73}.ey[a-zA-Z0-9]{365}.[a-zA-Z0-9_-]{683})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Graphhopper_356"
+    description = '''Graphhopper'''
+    regex = '''(?:graphhopper).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Groovehq_357"
+    description = '''Groovehq'''
+    regex = '''(?:groove).{0,40}\b([a-z0-9A-Z]{64})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Guru - 1_358"
+    description = '''Guru - 1'''
+    regex = '''(?:guru).{0,40}\b([a-zA-Z0-9]{3,20}@[a-zA-Z0-9]{2,12}.[a-zA-Z0-9]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Guru - 2_359"
+    description = '''Guru - 2'''
+    regex = '''(?:guru).{0,40}\b([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Gyazo_360"
+    description = '''Gyazo'''
+    regex = '''(?:gyazo).{0,40}\b([0-9A-Za-z-]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Happi_361"
+    description = '''Happi'''
+    regex = '''(?:happi).{0,40}\b([a-zA-Z0-9]{56})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Happyscribe_362"
+    description = '''Happyscribe'''
+    regex = '''(?:happyscribe).{0,40}\b([0-9a-zA-Z]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Harvest - 1_363"
+    description = '''Harvest - 1'''
+    regex = '''(?:harvest).{0,40}\b([a-z0-9A-Z._]{97})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Hellosign_364"
+    description = '''Hellosign'''
+    regex = '''(?:hellosign).{0,40}\b([a-zA-Z-0-9/+]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Helpcrunch_365"
+    description = '''Helpcrunch'''
+    regex = '''(?:helpcrunch).{0,40}\b([a-zA-Z-0-9+/=]{328})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Helpscout_366"
+    description = '''Helpscout'''
+    regex = '''(?:helpscout).{0,40}\b([A-Za-z0-9]{56})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Hereapi_367"
+    description = '''Hereapi'''
+    regex = '''(?:hereapi).{0,40}\b([a-zA-Z0-9\S]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Heroku_368"
+    description = '''Heroku'''
+    regex = '''(?:heroku).{0,40}\b([0-9Aa-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Hive - 2_369"
+    description = '''Hive - 2'''
+    regex = '''(?:hive).{0,40}\b([0-9A-Za-z]{17})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Hiveage_370"
+    description = '''Hiveage'''
+    regex = '''(?:hiveage).{0,40}\b([0-9A-Za-z\_\-]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Holidayapi_371"
+    description = '''Holidayapi'''
+    regex = '''(?:holidayapi).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Html2pdf_372"
+    description = '''Html2pdf'''
+    regex = '''(?:html2pdf).{0,40}\b([a-zA-Z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Hubspotapikey_373"
+    description = '''Hubspotapikey'''
+    regex = '''(?:hubspot).{0,40}\b([A-Za-z0-9]{8}\-[A-Za-z0-9]{4}\-[A-Za-z0-9]{4}\-[A-Za-z0-9]{4}\-[A-Za-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Humanity_374"
+    description = '''Humanity'''
+    regex = '''(?:humanity).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Hypertrack - 1_375"
+    description = '''Hypertrack - 1'''
+    regex = '''(?:hypertrack).{0,40}\b([0-9a-zA-Z\_\-]{54})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Hypertrack - 2_376"
+    description = '''Hypertrack - 2'''
+    regex = '''(?:hypertrack).{0,40}\b([0-9a-zA-Z\_\-]{27})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ibmclouduserkey_377"
+    description = '''Ibmclouduserkey'''
+    regex = '''(?:ibm).{0,40}\b([A-Za-z0-9_-]{44})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Iconfinder_378"
+    description = '''Iconfinder'''
+    regex = '''(?:iconfinder).{0,40}\b([a-zA-Z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Iexcloud_379"
+    description = '''Iexcloud'''
+    regex = '''(?:iexcloud).{0,40}\b([a-z0-9_]{35})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Imagekit_380"
+    description = '''Imagekit'''
+    regex = '''(?:imagekit).{0,40}\b([a-zA-Z0-9_=]{36})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Imagga_381"
+    description = '''Imagga'''
+    regex = '''(?:imagga).{0,40}\b([a-z0-9A-Z=]{72})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Impala_382"
+    description = '''Impala'''
+    regex = '''(?:impala).{0,40}\b([0-9A-Za-z_]{46})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Insightly_383"
+    description = '''Insightly'''
+    regex = '''(?:insightly).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Integromat_384"
+    description = '''Integromat'''
+    regex = '''(?:integromat).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Intrinio_385"
+    description = '''Intrinio'''
+    regex = '''(?:intrinio).{0,40}\b([a-zA-Z0-9]{44})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Invoiceocean - 1_386"
+    description = '''Invoiceocean - 1'''
+    regex = '''(?:invoiceocean).{0,40}\b([0-9A-Za-z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Invoiceocean - 2_387"
+    description = '''Invoiceocean - 2'''
+    regex = '''\b([0-9a-z]{1,}.invoiceocean.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ipapi_388"
+    description = '''Ipapi'''
+    regex = '''(?:ipapi).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ipgeolocation_389"
+    description = '''Ipgeolocation'''
+    regex = '''(?:ipgeolocation).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ipify_390"
+    description = '''Ipify'''
+    regex = '''(?:ipify).{0,40}\b([a-zA-Z0-9_-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ipinfodb_391"
+    description = '''Ipinfodb'''
+    regex = '''(?:ipinfodb).{0,40}\b([a-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ipquality_392"
+    description = '''Ipquality'''
+    regex = '''(?:ipquality).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ipstack_393"
+    description = '''Ipstack'''
+    regex = '''(?:ipstack).{0,40}\b([a-fA-f0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "JDBC Connection String_394"
+    description = '''JDBC Connection String'''
+    regex = '''jdbc:[a-z:]+://[A-Za-z0-9\.\-_:;=/@?,&]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Jiratoken - 1_395"
+    description = '''Jiratoken - 1'''
+    regex = '''(?:jira).{0,40}\b([a-zA-Z-0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Jiratoken - 2_396"
+    description = '''Jiratoken - 2'''
+    regex = '''(?:jira).{0,40}\b([a-zA-Z-0-9]{5,24}\@[a-zA-Z-0-9]{3,16}\.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Jotform_397"
+    description = '''Jotform'''
+    regex = '''(?:jotform).{0,40}\b([0-9Aa-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Jumpcloud_398"
+    description = '''Jumpcloud'''
+    regex = '''(?:jumpcloud).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Juro_399"
+    description = '''Juro'''
+    regex = '''(?:juro).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kanban - 1_400"
+    description = '''Kanban - 1'''
+    regex = '''(?:kanban).{0,40}\b([0-9A-Z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kanban - 2_401"
+    description = '''Kanban - 2'''
+    regex = '''\b([0-9a-z]{1,}.kanbantool.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Karmacrm_402"
+    description = '''Karmacrm'''
+    regex = '''(?:karma).{0,40}\b([a-zA-Z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Keenio - 1_403"
+    description = '''Keenio - 1'''
+    regex = '''(?:keen).{0,40}\b([0-9a-z]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Keenio - 2_404"
+    description = '''Keenio - 2'''
+    regex = '''(?:keen).{0,40}\b([0-9A-Z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kickbox_405"
+    description = '''Kickbox'''
+    regex = '''(?:kickbox).{0,40}\b([a-zA-Z0-9_]+[a-zA-Z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Klipfolio_406"
+    description = '''Klipfolio'''
+    regex = '''(?:klipfolio).{0,40}\b([0-9a-f]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kontent_407"
+    description = '''Kontent'''
+    regex = '''(?:kontent).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kraken - 1_408"
+    description = '''Kraken - 1'''
+    regex = '''(?:kraken).{0,40}\b([0-9A-Za-z\/\+=]{56}[ "'\r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kraken - 2_409"
+    description = '''Kraken - 2'''
+    regex = '''(?:kraken).{0,40}\b([0-9A-Za-z\/\+=]{86,88}[ "'\r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kucoin - 1_410"
+    description = '''Kucoin - 1'''
+    regex = '''(?:kucoin).{0,40}([ \r\n]{1}[!-~]{7,32}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kucoin - 2_411"
+    description = '''Kucoin - 2'''
+    regex = '''(?:kucoin).{0,40}\b([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kucoin - 3_412"
+    description = '''Kucoin - 3'''
+    regex = '''(?:kucoin).{0,40}\b([0-9a-f]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Kylas_413"
+    description = '''Kylas'''
+    regex = '''(?:kylas).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Languagelayer_414"
+    description = '''Languagelayer'''
+    regex = '''(?:languagelayer).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Lastfm_415"
+    description = '''Lastfm'''
+    regex = '''(?:lastfm).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Launchdarkly_416"
+    description = '''Launchdarkly'''
+    regex = '''(?:launchdarkly).{0,40}\b([a-z0-9-]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Leadfeeder_417"
+    description = '''Leadfeeder'''
+    regex = '''(?:leadfeeder).{0,40}\b([a-zA-Z0-9-]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Lendflow_418"
+    description = '''Lendflow'''
+    regex = '''(?:lendflow).{0,40}\b([a-zA-Z0-9]{36}\.[a-zA-Z0-9]{235}\.[a-zA-Z0-9]{32}\-[a-zA-Z0-9]{47}\-[a-zA-Z0-9_]{162}\-[a-zA-Z0-9]{42}\-[a-zA-Z0-9_]{40}\-[a-zA-Z0-9_]{66}\-[a-zA-Z0-9_]{59}\-[a-zA-Z0-9]{7}\-[a-zA-Z0-9_]{220})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Lexigram_419"
+    description = '''Lexigram'''
+    regex = '''(?:lexigram).{0,40}\b([a-zA-Z0-9\S]{301})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Linearapi_420"
+    description = '''Linearapi'''
+    regex = '''\b(lin_api_[0-9A-Za-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Linemessaging_421"
+    description = '''Linemessaging'''
+    regex = '''(?:line).{0,40}\b([A-Za-z0-9+/]{171,172})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Linenotify_422"
+    description = '''Linenotify'''
+    regex = '''(?:linenotify).{0,40}\b([0-9A-Za-z]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Linkpreview_423"
+    description = '''Linkpreview'''
+    regex = '''(?:linkpreview).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Liveagent_424"
+    description = '''Liveagent'''
+    regex = '''(?:liveagent).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Livestorm_425"
+    description = '''Livestorm'''
+    regex = '''(?:livestorm).{0,40}\b(eyJhbGciOiJIUzI1NiJ9\.eyJhdWQiOiJhcGkubGl2ZXN0b3JtLmNvIiwianRpIjoi[0-9A-Z-a-z]{134}\.[0-9A-Za-z\-\_]{43}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Locationiq_426"
+    description = '''Locationiq'''
+    regex = '''\b(pk\.[a-zA-Z-0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Loginradius_427"
+    description = '''Loginradius'''
+    regex = '''(?:loginradius).{0,40}\b([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Lokalisetoken_428"
+    description = '''Lokalisetoken'''
+    regex = '''(?:lokalise).{0,40}\b([a-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Loyverse_429"
+    description = '''Loyverse'''
+    regex = '''(?:loyverse).{0,40}\b([0-9-a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Luno - 1_430"
+    description = '''Luno - 1'''
+    regex = '''(?:luno).{0,40}\b([a-z0-9]{13})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Luno - 2_431"
+    description = '''Luno - 2'''
+    regex = '''(?:luno).{0,40}\b([a-zA-Z0-9_-]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Macaddress_432"
+    description = '''Macaddress'''
+    regex = '''(?:macaddress).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Madkudu_433"
+    description = '''Madkudu'''
+    regex = '''(?:madkudu).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Magnetic_434"
+    description = '''Magnetic'''
+    regex = '''(?:magnetic).{0,40}\b([0-9Aa-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "MailChimp API Key_435"
+    description = '''MailChimp API Key'''
+    regex = '''[0-9a-f]{32}-us[0-9]{1,2}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailboxlayer_436"
+    description = '''Mailboxlayer'''
+    regex = '''(?:mailboxlayer).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailerlite_437"
+    description = '''Mailerlite'''
+    regex = '''(?:mailerlite).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailgun - 2_438"
+    description = '''Mailgun - 2'''
+    regex = '''(?:mailgun).{0,40}\b([a-zA-Z-0-9]{72})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailgun API Key - 1_439"
+    description = '''Mailgun API Key - 1'''
+    regex = '''key-[0-9a-zA-Z]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailjetbasicauth_440"
+    description = '''Mailjetbasicauth'''
+    regex = '''(?:mailjet).{0,40}\b([A-Za-z0-9]{87}\=)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailjetsms_441"
+    description = '''Mailjetsms'''
+    regex = '''(?:mailjet).{0,40}\b([A-Za-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailmodo_442"
+    description = '''Mailmodo'''
+    regex = '''(?:mailmodo).{0,40}\b([A-Z0-9]{7}-[A-Z0-9]{7}-[A-Z0-9]{7}-[A-Z0-9]{7})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mailsac_443"
+    description = '''Mailsac'''
+    regex = '''(?:mailsac).{0,40}\b(k_[0-9A-Za-z]{36,})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mandrill_444"
+    description = '''Mandrill'''
+    regex = '''(?:mandrill).{0,40}\b([A-Za-z0-9_-]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mapbox - 2_445"
+    description = '''Mapbox - 2'''
+    regex = '''\b(sk\.[a-zA-Z-0-9\.]{80,240})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mapquest_446"
+    description = '''Mapquest'''
+    regex = '''(?:mapquest).{0,40}\b([0-9A-Za-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Marketstack_447"
+    description = '''Marketstack'''
+    regex = '''(?:marketstack).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mattermostpersonaltoken - 1_448"
+    description = '''Mattermostpersonaltoken - 1'''
+    regex = '''(?:mattermost).{0,40}\b([A-Za-z0-9-_]{1,}.cloud.mattermost.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mattermostpersonaltoken - 2_449"
+    description = '''Mattermostpersonaltoken - 2'''
+    regex = '''(?:mattermost).{0,40}\b([a-z0-9]{26})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mavenlink_450"
+    description = '''Mavenlink'''
+    regex = '''(?:mavenlink).{0,40}\b([0-9a-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Maxmindlicense - 1_451"
+    description = '''Maxmindlicense - 1'''
+    regex = '''(?:maxmind|geoip).{0,40}\b([0-9A-Za-z]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Maxmindlicense - 2_452"
+    description = '''Maxmindlicense - 2'''
+    regex = '''(?:maxmind|geoip).{0,40}\b([0-9]{2,7})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Meaningcloud_453"
+    description = '''Meaningcloud'''
+    regex = '''(?:meaningcloud).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mediastack_454"
+    description = '''Mediastack'''
+    regex = '''(?:mediastack).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Meistertask_455"
+    description = '''Meistertask'''
+    regex = '''(?:meistertask).{0,40}\b([a-zA-Z0-9]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mesibo_456"
+    description = '''Mesibo'''
+    regex = '''(?:mesibo).{0,40}\b([0-9A-Za-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Messagebird_457"
+    description = '''Messagebird'''
+    regex = '''(?:messagebird).{0,40}\b([A-Za-z0-9_-]{25})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Metaapi - 1_458"
+    description = '''Metaapi - 1'''
+    regex = '''(?:metaapi|meta-api).{0,40}\b([0-9a-f]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Metaapi - 2_459"
+    description = '''Metaapi - 2'''
+    regex = '''(?:metaapi|meta-api).{0,40}\b([0-9a-f]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Metrilo_460"
+    description = '''Metrilo'''
+    regex = '''(?:metrilo).{0,40}\b([a-z0-9]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Microsoftteamswebhook_461"
+    description = '''Microsoftteamswebhook'''
+    regex = '''(https:\/\/[a-zA-Z-0-9]+\.webhook\.office\.com\/webhookb2\/[a-zA-Z-0-9]{8}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{12}\@[a-zA-Z-0-9]{8}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{12}\/IncomingWebhook\/[a-zA-Z-0-9]{32}\/[a-zA-Z-0-9]{8}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{4}-[a-zA-Z-0-9]{12})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Midise_462"
+    description = '''Midise'''
+    regex = '''midi-662b69edd2[a-zA-Z0-9]{54}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mindmeister_463"
+    description = '''Mindmeister'''
+    regex = '''(?:mindmeister).{0,40}\b([a-zA-Z0-9]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mite - 1_464"
+    description = '''Mite - 1'''
+    regex = '''(?:mite).{0,40}\b([0-9a-z]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mite - 2_465"
+    description = '''Mite - 2'''
+    regex = '''\b([0-9a-z-]{1,}.mite.yo.lk)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mixmax_466"
+    description = '''Mixmax'''
+    regex = '''(?:mixmax).{0,40}\b([a-zA-Z0-9_-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mixpanel - 1_467"
+    description = '''Mixpanel - 1'''
+    regex = '''(?:mixpanel).{0,40}\b([a-zA-Z0-9.-]{30,40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mixpanel - 2_468"
+    description = '''Mixpanel - 2'''
+    regex = '''(?:mixpanel).{0,40}\b([a-zA-Z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Moderation_469"
+    description = '''Moderation'''
+    regex = '''(?:moderation).{0,40}\b([a-zA-Z0-9]{36}\.[a-zA-Z0-9]{115}\.[a-zA-Z0-9_]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Monday_470"
+    description = '''Monday'''
+    regex = '''(?:monday).{0,40}\b(ey[a-zA-Z0-9_.]{210,225})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Moonclerck_471"
+    description = '''Moonclerck'''
+    regex = '''(?:moonclerck).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Moonclerk_472"
+    description = '''Moonclerk'''
+    regex = '''(?:moonclerk).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Moosend_473"
+    description = '''Moosend'''
+    regex = '''(?:moosend).{0,40}\b([0-9Aa-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Mrticktock - 1_474"
+    description = '''Mrticktock - 1'''
+    regex = '''(?:mrticktock).{0,40}\b([a-zA-Z0-9!=@#$%()_^]{1,50})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Myintervals_475"
+    description = '''Myintervals'''
+    regex = '''(?:myintervals).{0,40}\b([0-9a-z]{11})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nasdaqdatalink_476"
+    description = '''Nasdaqdatalink'''
+    regex = '''(?:nasdaq).{0,40}\b([a-zA-Z0-9_-]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nethunt - 1_477"
+    description = '''Nethunt - 1'''
+    regex = '''(?:nethunt).{0,40}\b([a-zA-Z0-9.-@]{25,30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nethunt - 2_478"
+    description = '''Nethunt - 2'''
+    regex = '''(?:nethunt).{0,40}\b([a-z0-9-\S]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Netlify_479"
+    description = '''Netlify'''
+    regex = '''(?:netlify).{0,40}\b([A-Za-z0-9_-]{43,45})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Neutrinoapi - 1_480"
+    description = '''Neutrinoapi - 1'''
+    regex = '''(?:neutrinoapi).{0,40}\b([a-zA-Z0-9]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Neutrinoapi - 2_481"
+    description = '''Neutrinoapi - 2'''
+    regex = '''(?:neutrinoapi).{0,40}\b([a-zA-Z0-9]{6,24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Newrelic Admin API Key_482"
+    description = '''Newrelic Admin API Key'''
+    regex = '''NRAA-[a-f0-9]{27}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Newrelic Insights API Key_483"
+    description = '''Newrelic Insights API Key'''
+    regex = '''NRI(?:I|Q)-[A-Za-z0-9\-_]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Newrelic REST API Key_484"
+    description = '''Newrelic REST API Key'''
+    regex = '''NRRA-[a-f0-9]{42}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Newrelic Synthetics Location Key_485"
+    description = '''Newrelic Synthetics Location Key'''
+    regex = '''NRSP-[a-z]{2}[0-9]{2}[a-f0-9]{31}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Newrelicpersonalapikey_486"
+    description = '''Newrelicpersonalapikey'''
+    regex = '''(?:newrelic).{0,40}\b([A-Za-z0-9_\.]{4}-[A-Za-z0-9_\.]{42})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Newsapi_487"
+    description = '''Newsapi'''
+    regex = '''(?:newsapi).{0,40}\b([a-z0-9]{32})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Newscatcher_488"
+    description = '''Newscatcher'''
+    regex = '''(?:newscatcher).{0,40}\b([0-9A-Za-z_]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nexmoapikey - 1_489"
+    description = '''Nexmoapikey - 1'''
+    regex = '''(?:nexmo).{0,40}\b([A-Za-z0-9_-]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nexmoapikey - 2_490"
+    description = '''Nexmoapikey - 2'''
+    regex = '''(?:nexmo).{0,40}\b([A-Za-z0-9_-]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nftport_491"
+    description = '''Nftport'''
+    regex = '''(?:nftport).{0,40}\b([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nicereply_492"
+    description = '''Nicereply'''
+    regex = '''(?:nicereply).{0,40}\b([0-9a-f]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nimble_493"
+    description = '''Nimble'''
+    regex = '''(?:nimble).{0,40}\b([a-zA-Z0-9]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nitro_494"
+    description = '''Nitro'''
+    regex = '''(?:nitro).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Noticeable_495"
+    description = '''Noticeable'''
+    regex = '''(?:noticeable).{0,40}\b([0-9a-zA-Z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Notion_496"
+    description = '''Notion'''
+    regex = '''\b(SECRET_KEY[A-Za-z0-9]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Notion"
+    description = '''Notion'''
+    regex = '''\b(SECRET[A-Za-z0-9]{43})\b'''
+    tags = ["secret"]
+    
+[[rules]]
+    ID = "Nozbeteams_497"
+    description = '''Nozbeteams'''
+    regex = '''(?:nozbe|nozbeteams).{0,40}\b([0-9A-Za-z]{16}_[0-9A-Za-z\-_]{64}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Numverify_498"
+    description = '''Numverify'''
+    regex = '''(?:numverify).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nutritionix - 1_499"
+    description = '''Nutritionix - 1'''
+    regex = '''(?:nutritionix).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nutritionix - 2_500"
+    description = '''Nutritionix - 2'''
+    regex = '''(?:nutritionix).{0,40}\b([a-z0-9]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Nylas_501"
+    description = '''Nylas'''
+    regex = '''(?:nylas).{0,40}\b([0-9A-Za-z]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Oanda_502"
+    description = '''Oanda'''
+    regex = '''(?:oanda).{0,40}\b([a-zA-Z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Omnisend_503"
+    description = '''Omnisend'''
+    regex = '''(?:omnisend).{0,40}\b([a-z0-9A-Z-]{75})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Onedesk - 1_504"
+    description = '''Onedesk - 1'''
+    regex = '''(?:onedesk).{0,40}\b([a-zA-Z0-9!=@#$%^]{8,64})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Onelogin - 2_505"
+    description = '''Onelogin - 2'''
+    regex = '''secret[a-zA-Z0-9_' "=]{0,20}([a-z0-9]{64})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Onepagecrm - 1_506"
+    description = '''Onepagecrm - 1'''
+    regex = '''(?:onepagecrm).{0,40}\b([a-zA-Z0-9=]{44})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Onepagecrm - 2_507"
+    description = '''Onepagecrm - 2'''
+    regex = '''(?:onepagecrm).{0,40}\b([a-z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Onwaterio_508"
+    description = '''Onwaterio'''
+    regex = '''(?:onwater).{0,40}\b([a-zA-Z0-9_-]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Oopspam_509"
+    description = '''Oopspam'''
+    regex = '''(?:oopspam).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Opencagedata_510"
+    description = '''Opencagedata'''
+    regex = '''(?:opencagedata).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Opengraphr_511"
+    description = '''Opengraphr'''
+    regex = '''(?:opengraphr).{0,40}\b([0-9Aa-zA-Z]{80})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Openuv_512"
+    description = '''Openuv'''
+    regex = '''(?:openuv).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Openweather_513"
+    description = '''Openweather'''
+    regex = '''(?:openweather).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Optimizely_514"
+    description = '''Optimizely'''
+    regex = '''(?:optimizely).{0,40}\b([0-9A-Za-z-:]{54})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Owlbot_515"
+    description = '''Owlbot'''
+    regex = '''(?:owlbot).{0,40}\b([a-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "PGP private key block_516"
+    description = '''PGP private key block'''
+    regex = '''-----BEGIN PGP PRIVATE KEY BLOCK-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pagerdutyapikey_517"
+    description = '''Pagerdutyapikey'''
+    regex = '''(?:pagerduty).{0,40}\b([a-z]{1}\+[a-zA-Z]{9}\-[a-z]{2}\-[a-z0-9]{5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pandadoc_518"
+    description = '''Pandadoc'''
+    regex = '''(?:pandadoc).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pandascore_519"
+    description = '''Pandascore'''
+    regex = '''(?:pandascore).{0,40}([ \r\n]{0,1}[0-9A-Za-z\-\_]{51}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Paralleldots_520"
+    description = '''Paralleldots'''
+    regex = '''(?:paralleldots).{0,40}\b([0-9A-Za-z]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Partnerstack_521"
+    description = '''Partnerstack'''
+    regex = '''(?:partnerstack).{0,40}\b([0-9A-Za-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Passbase_522"
+    description = '''Passbase'''
+    regex = '''(?:passbase).{0,40}\b([a-zA-Z0-9]{128})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Password in URL_523"
+    description = '''Password in URL'''
+    regex = '''[a-zA-Z]{3,10}://[^/\s:@]{3,20}:[^/\s:@]{3,20}@.{1,100}["'\s]'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pastebin_524"
+    description = '''Pastebin'''
+    regex = '''(?:pastebin).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "PayPal Braintree access token_525"
+    description = '''PayPal Braintree access token'''
+    regex = '''access_token\$production\$[0-9a-z]{16}\$[0-9a-f]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Paymoapp_526"
+    description = '''Paymoapp'''
+    regex = '''(?:paymoapp).{0,40}\b([a-zA-Z0-9]{44})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Paymongo_527"
+    description = '''Paymongo'''
+    regex = '''(?:paymongo).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Paystack_528"
+    description = '''Paystack'''
+    regex = '''\b(sk\_[a-z]{1,}\_[A-Za-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pdflayer_529"
+    description = '''Pdflayer'''
+    regex = '''(?:pdflayer).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pdfshift_530"
+    description = '''Pdfshift'''
+    regex = '''(?:pdfshift).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Peopledatalabs_531"
+    description = '''Peopledatalabs'''
+    regex = '''(?:peopledatalabs).{0,40}\b([a-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pepipost_532"
+    description = '''Pepipost'''
+    regex = '''(?:pepipost|netcore).{0,40}\b([a-zA-Z-0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Picatic API key_533"
+    description = '''Picatic API key'''
+    regex = '''sk_live_[0-9a-z]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pipedream_534"
+    description = '''Pipedream'''
+    regex = '''(?:pipedream).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pipedrive_535"
+    description = '''Pipedrive'''
+    regex = '''(?:pipedrive).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pivotaltracker_536"
+    description = '''Pivotaltracker'''
+    regex = '''(?:pivotal).{0,40}([a-z0-9]{32})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pixabay_537"
+    description = '''Pixabay'''
+    regex = '''(?:pixabay).{0,40}\b([a-z0-9-]{34})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Plaidkey - 1_538"
+    description = '''Plaidkey - 1'''
+    regex = '''(?:plaid).{0,40}\b([a-z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Plaidkey - 2_539"
+    description = '''Plaidkey - 2'''
+    regex = '''(?:plaid).{0,40}\b([a-z0-9]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Planviewleankit - 1_540"
+    description = '''Planviewleankit - 1'''
+    regex = '''(?:planviewleankit|planview).{0,40}\b([0-9a-f]{128})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Planviewleankit - 2_541"
+    description = '''Planviewleankit - 2'''
+    regex = '''(?:planviewleankit|planview).{0,40}(?:subdomain).\b([a-zA-Z][a-zA-Z0-9.-]{1,23}[a-zA-Z0-9])\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Planyo_542"
+    description = '''Planyo'''
+    regex = '''(?:planyo).{0,40}\b([0-9a-z]{62})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Plivo - 1_543"
+    description = '''Plivo - 1'''
+    regex = '''(?:plivo).{0,40}\b([A-Za-z0-9_-]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Plivo - 2_544"
+    description = '''Plivo - 2'''
+    regex = '''(?:plivo).{0,40}\b([A-Z]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Poloniex - 1_545"
+    description = '''Poloniex - 1'''
+    regex = '''(?:poloniex).{0,40}\b([0-9a-f]{128})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Poloniex - 2_546"
+    description = '''Poloniex - 2'''
+    regex = '''(?:poloniex).{0,40}\b([0-9A-Z]{8}-[0-9A-Z]{8}-[0-9A-Z]{8}-[0-9A-Z]{8})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Polygon_547"
+    description = '''Polygon'''
+    regex = '''(?:polygon).{0,40}\b([a-z0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Positionstack_548"
+    description = '''Positionstack'''
+    regex = '''(?:positionstack).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Postageapp_549"
+    description = '''Postageapp'''
+    regex = '''(?:postageapp).{0,40}\b([0-9A-Za-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Posthog_550"
+    description = '''Posthog'''
+    regex = '''\b(phc_[a-zA-Z0-9_]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Postman_551"
+    description = '''Postman'''
+    regex = '''\b(PMAK-[a-zA-Z-0-9]{59})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Postmark_552"
+    description = '''Postmark'''
+    regex = '''(?:postmark).{0,40}\b([0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Powrbot_553"
+    description = '''Powrbot'''
+    regex = '''(?:powrbot).{0,40}\b([a-z0-9A-Z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Privatekey_554"
+    description = '''Privatekey'''
+    regex = '''-----\s*?BEGIN[ A-Z0-9_-]*?PRIVATE KEY\s*?-----[\s\S]*?----\s*?END[ A-Z0-9_-]*? PRIVATE KEY\s*?-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Prospectcrm_555"
+    description = '''Prospectcrm'''
+    regex = '''(?:prospect).{0,40}\b([a-z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Prospectio_556"
+    description = '''Prospectio'''
+    regex = '''(?:prospect).{0,40}\b([a-z0-9A-Z-]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Protocolsio_557"
+    description = '''Protocolsio'''
+    regex = '''(?:protocols).{0,40}\b([a-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Proxycrawl_558"
+    description = '''Proxycrawl'''
+    regex = '''(?:proxycrawl).{0,40}\b([a-zA-Z0-9_]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pubnubpublishkey - 1_559"
+    description = '''Pubnubpublishkey - 1'''
+    regex = '''\b(sub-c-[0-9a-z]{8}-[a-z]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pubnubpublishkey - 2_560"
+    description = '''Pubnubpublishkey - 2'''
+    regex = '''\b(pub-c-[0-9a-z]{8}-[0-9a-z]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Purestake_561"
+    description = '''Purestake'''
+    regex = '''(?:purestake).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pushbulletapikey_562"
+    description = '''Pushbulletapikey'''
+    regex = '''(?:pushbullet).{0,40}\b([A-Za-z0-9_\.]{34})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pusherchannelkey - 2_563"
+    description = '''Pusherchannelkey - 2'''
+    regex = '''(?:pusher).{0,40}\b([a-z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Pusherchannelkey - 3_564"
+    description = '''Pusherchannelkey - 3'''
+    regex = '''(?:pusher).{0,40}\b([0-9]{7})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "PyPI upload token_565"
+    description = '''PyPI upload token'''
+    regex = '''pypi-AgEIcHlwaS5vcmc[A-Za-z0-9-_]{50,1000}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Qualaroo_566"
+    description = '''Qualaroo'''
+    regex = '''(?:qualaroo).{0,40}\b([a-z0-9A-Z=]{64})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Qubole_567"
+    description = '''Qubole'''
+    regex = '''(?:qubole).{0,40}\b([0-9a-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Quickmetrics_568"
+    description = '''Quickmetrics'''
+    regex = '''(?:quickmetrics).{0,40}\b([a-zA-Z0-9_-]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "RKCS8_569"
+    description = '''RKCS8'''
+    regex = '''-----BEGIN PRIVATE KEY-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "RSA private key_570"
+    description = '''RSA private key'''
+    regex = '''-----BEGIN RSA PRIVATE KEY-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rapidapi_571"
+    description = '''Rapidapi'''
+    regex = '''(?:rapidapi).{0,40}\b([A-Za-z0-9_-]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Raven_572"
+    description = '''Raven'''
+    regex = '''(?:raven).{0,40}\b([A-Z0-9-]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rawg_573"
+    description = '''Rawg'''
+    regex = '''(?:rawg).{0,40}\b([0-9Aa-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Razorpay - 1_574"
+    description = '''Razorpay - 1'''
+    regex = '''\brzp_\w{2,6}_\w{10,20}\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Readme_575"
+    description = '''Readme'''
+    regex = '''(?:readme).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Reallysimplesystems_576"
+    description = '''Reallysimplesystems'''
+    regex = '''\b(ey[a-zA-Z0-9-._]{153}.ey[a-zA-Z0-9-._]{916,1000})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rebrandly_577"
+    description = '''Rebrandly'''
+    regex = '''(?:rebrandly).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Refiner_578"
+    description = '''Refiner'''
+    regex = '''(?:refiner).{0,40}\b([0-9Aa-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Repairshopr - 1_579"
+    description = '''Repairshopr - 1'''
+    regex = '''(?:repairshopr).{0,40}\b([a-zA-Z0-9_.!+$#^*]{3,32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Repairshopr - 2_580"
+    description = '''Repairshopr - 2'''
+    regex = '''(?:repairshopr).{0,40}\b([a-zA-Z0-9-]{51})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Restpack_581"
+    description = '''Restpack'''
+    regex = '''(?:restpack).{0,40}\b([a-zA-Z0-9]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Restpackhtmltopdfapi_582"
+    description = '''Restpackhtmltopdfapi'''
+    regex = '''(?:restpack).{0,40}\b([0-9A-Za-z]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rev - 1_583"
+    description = '''Rev - 1'''
+    regex = '''(?:rev).{0,40}\b([0-9a-zA-Z\/\+]{27}\=[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Revampcrm - 1_584"
+    description = '''Revampcrm - 1'''
+    regex = '''(?:revamp).{0,40}\b([a-zA-Z0-9]{40}\b)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ringcentral - 1_585"
+    description = '''Ringcentral - 1'''
+    regex = '''(?:ringcentral).{0,40}\b(https://www.[0-9A-Za-z_-]{1,}.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ringcentral - 2_586"
+    description = '''Ringcentral - 2'''
+    regex = '''(?:ringcentral).{0,40}\b([0-9A-Za-z_-]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ritekit_587"
+    description = '''Ritekit'''
+    regex = '''(?:ritekit).{0,40}\b([0-9a-f]{44})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Roaring_588"
+    description = '''Roaring'''
+    regex = '''(?:roaring).{0,40}\b([0-9A-Za-z_-]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rocketreach_589"
+    description = '''Rocketreach'''
+    regex = '''(?:rocketreach).{0,40}\b([a-z0-9-]{39})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Roninapp - 2_590"
+    description = '''Roninapp - 2'''
+    regex = '''(?:ronin).{0,40}\b([0-9a-zA-Z]{26})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Route4me_591"
+    description = '''Route4me'''
+    regex = '''(?:route4me).{0,40}\b([0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rownd - 1_592"
+    description = '''Rownd - 1'''
+    regex = '''(?:rownd).{0,40}\b([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rownd - 2_593"
+    description = '''Rownd - 2'''
+    regex = '''(?:rownd).{0,40}\b([a-z0-9]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rownd - 3_594"
+    description = '''Rownd - 3'''
+    regex = '''(?:rownd).{0,40}\b([0-9]{18})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Rubygems_595"
+    description = '''Rubygems'''
+    regex = '''\b(rubygems_[a-zA0-9]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Runrunit - 1_596"
+    description = '''Runrunit - 1'''
+    regex = '''(?:runrunit).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Runrunit - 2_597"
+    description = '''Runrunit - 2'''
+    regex = '''(?:runrunit).{0,40}\b([0-9A-Za-z]{18,20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "SSH_598"
+    description = '''SSH'''
+    regex = '''-----BEGIN OPENSSH PRIVATE KEY-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "SSH (DSA) private key_599"
+    description = '''SSH (DSA) private key'''
+    regex = '''-----BEGIN DSA PRIVATE KEY-----'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Salesblink_600"
+    description = '''Salesblink'''
+    regex = '''(?:salesblink).{0,40}\b([a-zA-Z]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Salescookie_601"
+    description = '''Salescookie'''
+    regex = '''(?:salescookie).{0,40}\b([a-zA-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Salesflare_602"
+    description = '''Salesflare'''
+    regex = '''(?:salesflare).{0,40}\b([a-zA-Z0-9_]{45})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Satismeterprojectkey - 1_603"
+    description = '''Satismeterprojectkey - 1'''
+    regex = '''(?:satismeter).{0,40}\b([a-zA-Z0-9]{4,20}@[a-zA-Z0-9]{2,12}.[a-zA-Z0-9]{2,12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Satismeterprojectkey - 2_604"
+    description = '''Satismeterprojectkey - 2'''
+    regex = '''(?:satismeter).{0,40}\b([a-zA-Z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Satismeterprojectkey - 3_605"
+    description = '''Satismeterprojectkey - 3'''
+    regex = '''(?:satismeter).{0,40}\b([a-zA-Z0-9!=@#$%^]{6,32})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Satismeterwritekey_606"
+    description = '''Satismeterwritekey'''
+    regex = '''(?:satismeter).{0,40}\b([a-z0-9A-Z]{16})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Saucelabs - 1_607"
+    description = '''Saucelabs - 1'''
+    regex = '''\b(oauth\-[a-z0-9]{8,}\-[a-z0-9]{5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Saucelabs - 2_608"
+    description = '''Saucelabs - 2'''
+    regex = '''(?:saucelabs).{0,40}\b([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scalewaykey_609"
+    description = '''Scalewaykey'''
+    regex = '''(?:scaleway).{0,40}\b([0-9a-z]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scrapeowl_610"
+    description = '''Scrapeowl'''
+    regex = '''(?:scrapeowl).{0,40}\b([0-9a-z]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scraperapi_611"
+    description = '''Scraperapi'''
+    regex = '''(?:scraperapi).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scraperbox_612"
+    description = '''Scraperbox'''
+    regex = '''(?:scraperbox).{0,40}\b([A-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scrapersite_613"
+    description = '''Scrapersite'''
+    regex = '''(?:scrapersite).{0,40}\b([a-zA-Z0-9]{45})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scrapestack_614"
+    description = '''Scrapestack'''
+    regex = '''(?:scrapestack).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scrapfly_615"
+    description = '''Scrapfly'''
+    regex = '''(?:scrapfly).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scrapingant_616"
+    description = '''Scrapingant'''
+    regex = '''(?:scrapingant).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Scrapingbee_617"
+    description = '''Scrapingbee'''
+    regex = '''(?:scrapingbee).{0,40}\b([A-Z0-9]{80})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Screenshotapi_618"
+    description = '''Screenshotapi'''
+    regex = '''(?:screenshotapi).{0,40}\b([0-9A-Z]{7}\-[0-9A-Z]{7}\-[0-9A-Z]{7}\-[0-9A-Z]{7})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Screenshotlayer_619"
+    description = '''Screenshotlayer'''
+    regex = '''(?:screenshotlayer).{0,40}\b([a-zA-Z0-9_]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Securitytrails_620"
+    description = '''Securitytrails'''
+    regex = '''(?:securitytrails).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Segmentapikey_621"
+    description = '''Segmentapikey'''
+    regex = '''(?:segment).{0,40}\b([A-Za-z0-9_\-a-zA-Z]{43}\.[A-Za-z0-9_\-a-zA-Z]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Selectpdf_622"
+    description = '''Selectpdf'''
+    regex = '''(?:selectpdf).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Semaphore_623"
+    description = '''Semaphore'''
+    regex = '''(?:semaphore).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "SendGrid API Key_624"
+    description = '''SendGrid API Key'''
+    regex = '''SG\.[\w_]{16,32}\.[\w_]{16,64}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sendbird - 1_625"
+    description = '''Sendbird - 1'''
+    regex = '''(?:sendbird).{0,40}\b([0-9a-f]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sendbird - 2_626"
+    description = '''Sendbird - 2'''
+    regex = '''(?:sendbird).{0,40}\b([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sendbirdorganizationapi_627"
+    description = '''Sendbirdorganizationapi'''
+    regex = '''(?:sendbird).{0,40}\b([0-9a-f]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sendgrid_628"
+    description = '''Sendgrid'''
+    regex = '''(?:sendgrid).{0,40}(SG\.[\w\-_]{20,24}\.[\w\-_]{39,50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sendinbluev2_629"
+    description = '''Sendinbluev2'''
+    regex = '''\b(xkeysib\-[A-Za-z0-9_-]{81})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sentiment - 1_630"
+    description = '''Sentiment - 1'''
+    regex = '''(?:sentiment).{0,40}\b([0-9]{17})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sentiment - 2_631"
+    description = '''Sentiment - 2'''
+    regex = '''(?:sentiment).{0,40}\b([a-zA-Z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sentrytoken_632"
+    description = '''Sentrytoken'''
+    regex = '''(?:sentry).{0,40}\b([a-f0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Serphouse_633"
+    description = '''Serphouse'''
+    regex = '''(?:serphouse).{0,40}\b([0-9A-Za-z]{60})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Serpstack_634"
+    description = '''Serpstack'''
+    regex = '''(?:serpstack).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sheety - 1_635"
+    description = '''Sheety - 1'''
+    regex = '''(?:sheety).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sheety - 2_636"
+    description = '''Sheety - 2'''
+    regex = '''(?:sheety).{0,40}\b([0-9a-z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sherpadesk_637"
+    description = '''Sherpadesk'''
+    regex = '''(?:sherpadesk).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shipday_638"
+    description = '''Shipday'''
+    regex = '''(?:shipday).{0,40}\b([a-zA-Z0-9.]{11}[a-zA-Z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shodankey_639"
+    description = '''Shodankey'''
+    regex = '''(?:shodan).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shopify access token_640"
+    description = '''Shopify access token'''
+    regex = '''shpat_[a-fA-F0-9]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shopify custom app access token_641"
+    description = '''Shopify custom app access token'''
+    regex = '''shpca_[a-fA-F0-9]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shopify private app access token_642"
+    description = '''Shopify private app access token'''
+    regex = '''shppa_[a-fA-F0-9]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shopify shared secret_643"
+    description = '''Shopify shared secret'''
+    regex = '''shpss_[a-fA-F0-9]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shortcut_644"
+    description = '''Shortcut'''
+    regex = '''(?:shortcut).{0,40}\b([0-9a-f-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shotstack_645"
+    description = '''Shotstack'''
+    regex = '''(?:shotstack).{0,40}\b([a-zA-Z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Shutterstockoauth_646"
+    description = '''Shutterstockoauth'''
+    regex = '''(?:shutterstock).{0,40}\b(v2/[0-9A-Za-z]{388})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Signalwire - 1_647"
+    description = '''Signalwire - 1'''
+    regex = '''\b([0-9a-z-]{3,64}.signalwire.com)\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Signalwire - 2_648"
+    description = '''Signalwire - 2'''
+    regex = '''(?:signalwire).{0,40}\b([0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Signalwire - 3_649"
+    description = '''Signalwire - 3'''
+    regex = '''(?:signalwire).{0,40}\b([0-9A-Za-z]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Signaturit_650"
+    description = '''Signaturit'''
+    regex = '''(?:signaturit).{0,40}\b([0-9A-Za-z]{86})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Signupgenius_651"
+    description = '''Signupgenius'''
+    regex = '''(?:signupgenius).{0,40}\b([0-9A-Za-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sigopt_652"
+    description = '''Sigopt'''
+    regex = '''(?:sigopt).{0,40}\b([A-Z0-9]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Simplesat_653"
+    description = '''Simplesat'''
+    regex = '''(?:simplesat).{0,40}\b([a-z0-9]{40})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Simplynoted_654"
+    description = '''Simplynoted'''
+    regex = '''(?:simplynoted).{0,40}\b([a-zA-Z0-9\S]{340,360})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Simvoly_655"
+    description = '''Simvoly'''
+    regex = '''(?:simvoly).{0,40}\b([a-z0-9]{33})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sinchmessage_656"
+    description = '''Sinchmessage'''
+    regex = '''(?:sinch).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sirv - 1_657"
+    description = '''Sirv - 1'''
+    regex = '''(?:sirv).{0,40}\b([a-zA-Z0-9\S]{88})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sirv - 2_658"
+    description = '''Sirv - 2'''
+    regex = '''(?:sirv).{0,40}\b([a-zA-Z0-9]{26})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Siteleaf_659"
+    description = '''Siteleaf'''
+    regex = '''(?:siteleaf).{0,40}\b([0-9Aa-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Skrappio_660"
+    description = '''Skrappio'''
+    regex = '''(?:skrapp).{0,40}\b([a-z0-9A-Z]{42})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Skybiometry_661"
+    description = '''Skybiometry'''
+    regex = '''(?:skybiometry).{0,40}\b([0-9a-z]{25,26})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Slack_662"
+    description = '''Slack'''
+    regex = '''xox[baprs]-[0-9a-zA-Z]{10,48}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Slack Token_663"
+    description = '''Slack Token'''
+    regex = '''(xox[pborsa]-[0-9]{12}-[0-9]{12}-[0-9]{12}-[a-z0-9]{32})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Slack Webhook_664"
+    description = '''Slack Webhook'''
+    regex = '''https://hooks.slack.com/services/T[a-zA-Z0-9_]{8,10}/B[a-zA-Z0-9_]{8,12}/[a-zA-Z0-9_]{23,24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Slack access token_665"
+    description = '''Slack access token'''
+    regex = '''xoxb-[0-9A-Za-z\-]{51}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Slackwebhook_666"
+    description = '''Slackwebhook'''
+    regex = '''(https:\/\/hooks.slack.com\/services\/[A-Za-z0-9+\/]{44,46})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Smartsheets_667"
+    description = '''Smartsheets'''
+    regex = '''(?:smartsheets).{0,40}\b([a-zA-Z0-9]{37})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Smartystreets - 1_668"
+    description = '''Smartystreets - 1'''
+    regex = '''(?:smartystreets).{0,40}\b([a-zA-Z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Smartystreets - 2_669"
+    description = '''Smartystreets - 2'''
+    regex = '''(?:smartystreets).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Smooch - 1_670"
+    description = '''Smooch - 1'''
+    regex = '''(?:smooch).{0,40}\b(act_[0-9a-z]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Smooch - 2_671"
+    description = '''Smooch - 2'''
+    regex = '''(?:smooch).{0,40}\b([0-9a-zA-Z_-]{86})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Snipcart_672"
+    description = '''Snipcart'''
+    regex = '''(?:snipcart).{0,40}\b([0-9A-Za-z_]{75})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Snykkey_673"
+    description = '''Snykkey'''
+    regex = '''(?:snyk).{0,40}\b([0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "SonarQube Token_674"
+    description = '''SonarQube Token'''
+    regex = '''sonar.{0,50}(?:"|'|`)?[0-9a-f]{40}(?:"|'|`)?'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Splunkobservabilitytoken_675"
+    description = '''Splunkobservabilitytoken'''
+    regex = '''(?:splunk).{0,40}\b([a-z0-9A-Z]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Spoonacular_676"
+    description = '''Spoonacular'''
+    regex = '''(?:spoonacular).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sportsmonk_677"
+    description = '''Sportsmonk'''
+    regex = '''(?:sportsmonk).{0,40}\b([0-9a-zA-Z]{60})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Square_678"
+    description = '''Square'''
+    regex = '''(?:square).{0,40}(EAAA[a-zA-Z0-9\-\+\=]{60})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Square OAuth Secret_679"
+    description = '''Square OAuth Secret'''
+    regex = '''sq0csp-[0-9A-Za-z\-_]{43}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Square access token_680"
+    description = '''Square access token'''
+    regex = '''sq0atp-[0-9A-Za-z\-_]{22}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Squareapp - 1_681"
+    description = '''Squareapp - 1'''
+    regex = '''[\w\-]*sq0i[a-z]{2}-[0-9A-Za-z\-_]{22,43}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Squareapp - 2_682"
+    description = '''Squareapp - 2'''
+    regex = '''[\w\-]*sq0c[a-z]{2}-[0-9A-Za-z\-_]{40,50}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Squarespace_683"
+    description = '''Squarespace'''
+    regex = '''(?:squarespace).{0,40}\b([0-9Aa-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Squareup_684"
+    description = '''Squareup'''
+    regex = '''\b(sq0idp-[0-9A-Za-z]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sslmate_685"
+    description = '''Sslmate'''
+    regex = '''(?:sslmate).{0,40}\b([a-zA-Z0-9]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stitchdata_686"
+    description = '''Stitchdata'''
+    regex = '''(?:stitchdata).{0,40}\b([0-9a-z_]{35})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stockdata_687"
+    description = '''Stockdata'''
+    regex = '''(?:stockdata).{0,40}\b([0-9A-Za-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Storecove_688"
+    description = '''Storecove'''
+    regex = '''(?:storecove).{0,40}\b([a-zA-Z0-9_-]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stormglass_689"
+    description = '''Stormglass'''
+    regex = '''(?:stormglass).{0,40}\b([0-9Aa-z-]{73})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Storyblok_690"
+    description = '''Storyblok'''
+    regex = '''(?:storyblok).{0,40}\b([0-9A-Za-z]{22}t{2})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Storychief_691"
+    description = '''Storychief'''
+    regex = '''(?:storychief).{0,40}\b([a-zA-Z0-9_\-.]{940,1000})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Strava - 1_692"
+    description = '''Strava - 1'''
+    regex = '''(?:strava).{0,40}\b([0-9]{5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Strava - 2_693"
+    description = '''Strava - 2'''
+    regex = '''(?:strava).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Streak_694"
+    description = '''Streak'''
+    regex = '''(?:streak).{0,40}\b([0-9Aa-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe_695"
+    description = '''Stripe'''
+    regex = '''[rs]k_live_[a-zA-Z0-9]{20,30}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe API Key - 1_696"
+    description = '''Stripe API Key - 1'''
+    regex = '''sk_live_[0-9a-zA-Z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe API key - 2_697"
+    description = '''Stripe API key - 2'''
+    regex = '''stripe[sr]k_live_[0-9a-zA-Z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe API key - 3_698"
+    description = '''Stripe API key - 3'''
+    regex = '''stripe[sk|rk]_live_[0-9a-zA-Z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe Public Live Key_699"
+    description = '''Stripe Public Live Key'''
+    regex = '''pk_live_[0-9a-z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe Public Test Key_700"
+    description = '''Stripe Public Test Key'''
+    regex = '''pk_test_[0-9a-z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe Restriced Key_701"
+    description = '''Stripe Restriced Key'''
+    regex = '''rk_(?:live|test)_[0-9a-zA-Z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe Restricted API Key_702"
+    description = '''Stripe Restricted API Key'''
+    regex = '''rk_live_[0-9a-zA-Z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe Secret Key_703"
+    description = '''Stripe Secret Key'''
+    regex = '''sk_(?:live|test)_[0-9a-zA-Z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe Secret Live Key_704"
+    description = '''Stripe Secret Live Key'''
+    regex = '''(sk|rk)_live_[0-9a-z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stripe Secret Test Key_705"
+    description = '''Stripe Secret Test Key'''
+    regex = '''(sk|rk)_test_[0-9a-z]{24}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stytch - 1_706"
+    description = '''Stytch - 1'''
+    regex = '''(?:stytch).{0,40}\b([a-zA-Z0-9-_]{47}=)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Stytch - 2_707"
+    description = '''Stytch - 2'''
+    regex = '''(?:stytch).{0,40}\b([a-z0-9-]{49})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sugester - 1_708"
+    description = '''Sugester - 1'''
+    regex = '''(?:sugester).{0,40}\b([a-zA-Z0-9_.!+$#^*%]{3,32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sugester - 2_709"
+    description = '''Sugester - 2'''
+    regex = '''(?:sugester).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sumologickey - 1_710"
+    description = '''Sumologickey - 1'''
+    regex = '''(?:sumo).{0,40}\b([A-Za-z0-9]{14})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Sumologickey - 2_711"
+    description = '''Sumologickey - 2'''
+    regex = '''(?:sumo).{0,40}\b([A-Za-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Supernotesapi_712"
+    description = '''Supernotesapi'''
+    regex = '''(?:supernotes).{0,40}([ \r\n]{0,1}[0-9A-Za-z\-_]{43}[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Surveybot_713"
+    description = '''Surveybot'''
+    regex = '''(?:surveybot).{0,40}\b([A-Za-z0-9-]{80})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Surveysparrow_714"
+    description = '''Surveysparrow'''
+    regex = '''(?:surveysparrow).{0,40}\b([a-zA-Z0-9-_]{88})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Survicate_715"
+    description = '''Survicate'''
+    regex = '''(?:survicate).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Swell - 2_716"
+    description = '''Swell - 2'''
+    regex = '''(?:swell).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Swiftype_717"
+    description = '''Swiftype'''
+    regex = '''(?:swiftype).{0,40}\b([a-zA-z-0-9]{6}\_[a-zA-z-0-9]{6}\-[a-zA-z-0-9]{6})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tallyfy_718"
+    description = '''Tallyfy'''
+    regex = '''(?:tallyfy).{0,40}\b([0-9A-Za-z]{36}\.[0-9A-Za-z]{264}\.[0-9A-Za-z\-\_]{683})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tatumio_719"
+    description = '''Tatumio'''
+    regex = '''(?:tatum).{0,40}\b([0-9a-z-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Taxjar_720"
+    description = '''Taxjar'''
+    regex = '''(?:taxjar).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Teamgate - 1_721"
+    description = '''Teamgate - 1'''
+    regex = '''(?:teamgate).{0,40}\b([a-z0-9]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Teamgate - 2_722"
+    description = '''Teamgate - 2'''
+    regex = '''(?:teamgate).{0,40}\b([a-zA-Z0-9]{80})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Teamworkcrm_723"
+    description = '''Teamworkcrm'''
+    regex = '''(?:teamwork|teamworkcrm).{0,40}\b(tkn\.v1_[0-9A-Za-z]{71}=[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Teamworkdesk_724"
+    description = '''Teamworkdesk'''
+    regex = '''(?:teamwork|teamworkdesk).{0,40}\b(tkn\.v1_[0-9A-Za-z]{71}=[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Teamworkspaces_725"
+    description = '''Teamworkspaces'''
+    regex = '''(?:teamwork|teamworkspaces).{0,40}\b(tkn\.v1_[0-9A-Za-z]{71}=[ \r\n]{1})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Technicalanalysisapi_726"
+    description = '''Technicalanalysisapi'''
+    regex = '''(?:technicalanalysisapi).{0,40}\b([A-Z0-9]{48})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Telegram Bot API Key_727"
+    description = '''Telegram Bot API Key'''
+    regex = '''[0-9]+:AA[0-9A-Za-z\-_]{33}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Telegram Secret_728"
+    description = '''Telegram Secret'''
+    regex = '''d{5,}:A[0-9a-z_-]{34,34}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Telegrambottoken_729"
+    description = '''Telegrambottoken'''
+    regex = '''(?:telegram).{0,40}\b([0-9]{8,10}:[a-zA-Z0-9_-]{35})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Telnyx_730"
+    description = '''Telnyx'''
+    regex = '''(?:telnyx).{0,40}\b(KEY[0-9A-Za-z_-]{55})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Terraformcloudpersonaltoken_731"
+    description = '''Terraformcloudpersonaltoken'''
+    regex = '''\b([A-Za-z0-9]{14}.atlasv1.[A-Za-z0-9]{67})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Text2data_732"
+    description = '''Text2data'''
+    regex = '''(?:text2data).{0,40}\b([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Textmagic - 1_733"
+    description = '''Textmagic - 1'''
+    regex = '''(?:textmagic).{0,40}\b([0-9A-Za-z]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Textmagic - 2_734"
+    description = '''Textmagic - 2'''
+    regex = '''(?:textmagic).{0,40}\b([0-9A-Za-z]{1,25})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Theoddsapi_735"
+    description = '''Theoddsapi'''
+    regex = '''(?:theoddsapi|the-odds-api).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Thinkific - 1_736"
+    description = '''Thinkific - 1'''
+    regex = '''(?:thinkific).{0,40}\b([0-9a-f]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Thinkific - 2_737"
+    description = '''Thinkific - 2'''
+    regex = '''(?:thinkific).{0,40}\b([0-9A-Za-z]{4,40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Thousandeyes - 1_738"
+    description = '''Thousandeyes - 1'''
+    regex = '''(?:thousandeyes).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Thousandeyes - 2_739"
+    description = '''Thousandeyes - 2'''
+    regex = '''(?:thousandeyes).{0,40}\b([a-zA-Z0-9]{3,20}@[a-zA-Z0-9]{2,12}.[a-zA-Z0-9]{2,5})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ticketmaster_740"
+    description = '''Ticketmaster'''
+    regex = '''(?:ticketmaster).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tiingo_741"
+    description = '''Tiingo'''
+    regex = '''(?:tiingo).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Timezoneapi_742"
+    description = '''Timezoneapi'''
+    regex = '''(?:timezoneapi).{0,40}\b([a-zA-Z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tly_743"
+    description = '''Tly'''
+    regex = '''(?:tly).{0,40}\b([0-9A-Za-z]{60})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tmetric_744"
+    description = '''Tmetric'''
+    regex = '''(?:tmetric).{0,40}\b([0-9A-Z]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Todoist_745"
+    description = '''Todoist'''
+    regex = '''(?:todoist).{0,40}\b([0-9a-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Toggltrack_746"
+    description = '''Toggltrack'''
+    regex = '''(?:toggl).{0,40}\b([0-9Aa-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tomorrowio_747"
+    description = '''Tomorrowio'''
+    regex = '''(?:tomorrow).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tomtom_748"
+    description = '''Tomtom'''
+    regex = '''(?:tomtom).{0,40}\b([0-9Aa-zA-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tradier_749"
+    description = '''Tradier'''
+    regex = '''(?:tradier).{0,40}\b([a-zA-Z0-9]{28})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Travelpayouts_750"
+    description = '''Travelpayouts'''
+    regex = '''(?:travelpayouts).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Travisci_751"
+    description = '''Travisci'''
+    regex = '''(?:travis).{0,40}\b([a-zA-Z0-9A-Z_]{22})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Trello URL_752"
+    description = '''Trello URL'''
+    regex = '''https://trello.com/b/[0-9a-z]/[0-9a-z_-]+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Trelloapikey - 2_753"
+    description = '''Trelloapikey - 2'''
+    regex = '''(?:trello).{0,40}\b([a-zA-Z-0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Twelvedata_754"
+    description = '''Twelvedata'''
+    regex = '''(?:twelvedata).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Twilio - 1_755"
+    description = '''Twilio - 1'''
+    regex = '''\bAC[0-9a-f]{32}\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Twilio API Key_756"
+    description = '''Twilio API Key'''
+    regex = '''SK[0-9a-fA-F]{32}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Twitter Client ID_757"
+    description = '''Twitter Client ID'''
+    regex = '''twitter[0-9a-z]{18,25}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Twitter Secret Key_758"
+    description = '''Twitter Secret Key'''
+    regex = '''twitter[0-9a-z]{35,44}'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Tyntec_759"
+    description = '''Tyntec'''
+    regex = '''(?:tyntec).{0,40}\b([a-zA-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Typeform_760"
+    description = '''Typeform'''
+    regex = '''(?:typeform).{0,40}\b([0-9A-Za-z]{44})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Ubidots_761"
+    description = '''Ubidots'''
+    regex = '''\b(BBFF-[0-9a-zA-Z]{30})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Unifyid_762"
+    description = '''Unifyid'''
+    regex = '''(?:unify).{0,40}\b([0-9A-Za-z_=-]{44})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Unplugg_763"
+    description = '''Unplugg'''
+    regex = '''(?:unplu).{0,40}\b([a-z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Unsplash_764"
+    description = '''Unsplash'''
+    regex = '''(?:unsplash).{0,40}\b([0-9A-Za-z_]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Upcdatabase_765"
+    description = '''Upcdatabase'''
+    regex = '''(?:upcdatabase).{0,40}\b([A-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Uplead_766"
+    description = '''Uplead'''
+    regex = '''(?:uplead).{0,40}\b([a-z0-9-]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Uploadcare_767"
+    description = '''Uploadcare'''
+    regex = '''(?:uploadcare).{0,40}\b([a-z0-9]{20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Upwave_768"
+    description = '''Upwave'''
+    regex = '''(?:upwave).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Urlscan_769"
+    description = '''Urlscan'''
+    regex = '''(?:urlscan).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Userstack_770"
+    description = '''Userstack'''
+    regex = '''(?:userstack).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Vatlayer_771"
+    description = '''Vatlayer'''
+    regex = '''(?:vatlayer).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Vercel_772"
+    description = '''Vercel'''
+    regex = '''(?:vercel).{0,40}\b([a-zA-Z0-9]{24})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Verifier - 1_773"
+    description = '''Verifier - 1'''
+    regex = '''(?:verifier).{0,40}\b([a-zA-Z-0-9-]{5,16}\@[a-zA-Z-0-9]{4,16}\.[a-zA-Z-0-9]{3,6})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Verifier - 2_774"
+    description = '''Verifier - 2'''
+    regex = '''(?:verifier).{0,40}\b([a-z0-9]{96})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Verimail_775"
+    description = '''Verimail'''
+    regex = '''(?:verimail).{0,40}\b([A-Z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Veriphone_776"
+    description = '''Veriphone'''
+    regex = '''(?:veriphone).{0,40}\b([0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Versioneye_777"
+    description = '''Versioneye'''
+    regex = '''(?:versioneye).{0,40}\b([a-zA-Z0-9-]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Viewneo_778"
+    description = '''Viewneo'''
+    regex = '''(?:viewneo).{0,40}\b([a-z0-9A-Z]{120,300}.[a-z0-9A-Z]{150,300}.[a-z0-9A-Z-_]{600,800})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Virustotal_779"
+    description = '''Virustotal'''
+    regex = '''(?:virustotal).{0,40}\b([a-f0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Visualcrossing_780"
+    description = '''Visualcrossing'''
+    regex = '''(?:visualcrossing).{0,40}\b([0-9A-Z]{25})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Voicegain_781"
+    description = '''Voicegain'''
+    regex = '''(?:voicegain).{0,40}\b(ey[0-9a-zA-Z_-]{34}.ey[0-9a-zA-Z_-]{108}.[0-9a-zA-Z_-]{43})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Vouchery - 1_782"
+    description = '''Vouchery - 1'''
+    regex = '''(?:vouchery).{0,40}\b([a-z0-9-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Vouchery - 2_783"
+    description = '''Vouchery - 2'''
+    regex = '''(?:vouchery).{0,40}\b([a-zA-Z0-9-\S]{2,20})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Vpnapi_784"
+    description = '''Vpnapi'''
+    regex = '''(?:vpnapi).{0,40}\b([a-z0-9A-Z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Vultrapikey_785"
+    description = '''Vultrapikey'''
+    regex = '''(?:vultr).{0,40} \b([A-Z0-9]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Vyte_786"
+    description = '''Vyte'''
+    regex = '''(?:vyte).{0,40}\b([0-9a-z]{50})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Walkscore_787"
+    description = '''Walkscore'''
+    regex = '''(?:walkscore).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Weatherbit_788"
+    description = '''Weatherbit'''
+    regex = '''(?:weatherbit).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Weatherstack_789"
+    description = '''Weatherstack'''
+    regex = '''(?:weatherstack).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Webex - 1_790"
+    description = '''Webex - 1'''
+    regex = '''(?:error).{0,40}(redirect_uri_mismatch)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Webex - 2_791"
+    description = '''Webex - 2'''
+    regex = '''(?:webex).{0,40}\b([A-Za-z0-9_-]{65})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Webex - 3_792"
+    description = '''Webex - 3'''
+    regex = '''(?:webex).{0,40}\b([A-Za-z0-9_-]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Webflow_793"
+    description = '''Webflow'''
+    regex = '''(?:webflow).{0,40}\b([a-zA0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Webscraper_794"
+    description = '''Webscraper'''
+    regex = '''(?:webscraper).{0,40}\b([a-zA-Z0-9]{60})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Webscraping_795"
+    description = '''Webscraping'''
+    regex = '''(?:webscraping).{0,40}\b([0-9A-Za-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Wepay - 2_796"
+    description = '''Wepay - 2'''
+    regex = '''(?:wepay).{0,40}\b([a-zA-Z0-9_?]{62})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Whoxy_797"
+    description = '''Whoxy'''
+    regex = '''(?:whoxy).{0,40}\b([0-9a-z]{33})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Worksnaps_798"
+    description = '''Worksnaps'''
+    regex = '''(?:worksnaps).{0,40}\b([0-9A-Za-z]{40})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Workstack_799"
+    description = '''Workstack'''
+    regex = '''(?:workstack).{0,40}\b([0-9Aa-zA-Z]{60})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Worldcoinindex_800"
+    description = '''Worldcoinindex'''
+    regex = '''(?:worldcoinindex).{0,40}\b([a-zA-Z0-9]{35})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Worldweather_801"
+    description = '''Worldweather'''
+    regex = '''(?:worldweather).{0,40}\b([0-9a-z]{31})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Wrike_802"
+    description = '''Wrike'''
+    regex = '''(?:wrike).{0,40}\b(ey[a-zA-Z0-9-._]{333})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Yandex_803"
+    description = '''Yandex'''
+    regex = '''(?:yandex).{0,40}\b([a-z0-9A-Z.]{83})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Youneedabudget_804"
+    description = '''Youneedabudget'''
+    regex = '''(?:youneedabudget).{0,40}\b([0-9a-f]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Yousign_805"
+    description = '''Yousign'''
+    regex = '''(?:yousign).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zapierwebhook_806"
+    description = '''Zapierwebhook'''
+    regex = '''(https:\/\/hooks.zapier.com\/hooks\/catch\/[A-Za-z0-9\/]{16})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zendeskapi - 3_807"
+    description = '''Zendeskapi - 3'''
+    regex = '''(?:zendesk).{0,40}([A-Za-z0-9_-]{40})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zenkitapi_808"
+    description = '''Zenkitapi'''
+    regex = '''(?:zenkit).{0,40}\b([0-9a-z]{8}\-[0-9A-Za-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zenscrape_809"
+    description = '''Zenscrape'''
+    regex = '''(?:zenscrape).{0,40}\b([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zenserp_810"
+    description = '''Zenserp'''
+    regex = '''(?:zenserp).{0,40}\b([0-9a-z-]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zeplin_811"
+    description = '''Zeplin'''
+    regex = '''(?:zeplin).{0,40}\b([a-zA-Z0-9-.]{350,400})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zerobounce_812"
+    description = '''Zerobounce'''
+    regex = '''(?:zerobounce).{0,40}\b([a-z0-9]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zipapi - 1_813"
+    description = '''Zipapi - 1'''
+    regex = '''(?:zipapi).{0,40}\b([a-zA-Z0-9!=@#$%^]{7,})'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zipapi - 3_814"
+    description = '''Zipapi - 3'''
+    regex = '''(?:zipapi).{0,40}\b([0-9a-z]{32})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zipcodeapi_815"
+    description = '''Zipcodeapi'''
+    regex = '''(?:zipcodeapi).{0,40}\b([a-zA-Z0-9]{64})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "Zonkafeedback_816"
+    description = '''Zonkafeedback'''
+    regex = '''(?:zonka).{0,40}\b([A-Za-z0-9]{36})\b'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "amazon_secret_access_key_817"
+    description = '''amazon_secret_access_key'''
+    regex = '''amazon[_-]?secret[_-]?access[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "ansible_vault_password_818"
+    description = '''ansible_vault_password'''
+    regex = '''ansible[_-]?vault[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "chrome_client_secret_819"
+    description = '''chrome_client_secret'''
+    regex = '''chrome[_-]?client[_-]?secret(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "chrome_refresh_token_820"
+    description = '''chrome_refresh_token'''
+    regex = '''chrome[_-]?refresh[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "ci_deploy_password_821"
+    description = '''ci_deploy_password'''
+    regex = '''ci[_-]?deploy[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "ci_project_url_822"
+    description = '''ci_project_url'''
+    regex = '''ci[_-]?project[_-]?url(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "ci_registry_user_823"
+    description = '''ci_registry_user'''
+    regex = '''ci[_-]?registry[_-]?user(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "ci_server_name_824"
+    description = '''ci_server_name'''
+    regex = '''ci[_-]?server[_-]?name(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "cloud_api_key_825"
+    description = '''cloud_api_key'''
+    regex = '''cloud[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "cloudflare_api_key_826"
+    description = '''cloudflare_api_key'''
+    regex = '''cloudflare[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "cloudflare_auth_email_827"
+    description = '''cloudflare_auth_email'''
+    regex = '''cloudflare[_-]?auth[_-]?email(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "consumer_key_828"
+    description = '''consumer_key'''
+    regex = '''consumer[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "database_username_829"
+    description = '''database_username'''
+    regex = '''database[_-]?username(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "db_password_830"
+    description = '''db_password'''
+    regex = '''db[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "db_pw_831"
+    description = '''db_pw'''
+    regex = '''db[_-]?pw(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "docker_hub_password_832"
+    description = '''docker_hub_password'''
+    regex = '''docker[_-]?hub[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "docker_passwd_833"
+    description = '''docker_passwd'''
+    regex = '''docker[_-]?passwd(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "docker_password_834"
+    description = '''docker_password'''
+    regex = '''docker[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "docker_token_835"
+    description = '''docker_token'''
+    regex = '''docker[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "dockerhub_password_836"
+    description = '''dockerhub_password'''
+    regex = '''dockerhub[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "doordash_auth_token_837"
+    description = '''doordash_auth_token'''
+    regex = '''doordash[_-]?auth[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "dropbox_oauth_bearer_838"
+    description = '''dropbox_oauth_bearer'''
+    regex = '''dropbox[_-]?oauth[_-]?bearer(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "droplet_travis_password_839"
+    description = '''droplet_travis_password'''
+    regex = '''droplet[_-]?travis[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "env_github_oauth_token_840"
+    description = '''env_github_oauth_token'''
+    regex = '''env[_-]?github[_-]?oauth[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "env_heroku_api_key_841"
+    description = '''env_heroku_api_key'''
+    regex = '''env[_-]?heroku[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "facebook_access_token_842"
+    description = '''facebook_access_token'''
+    regex = '''(EAACEdEose0cBA[0-9A-Za-z]+)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "firebase_api_json_843"
+    description = '''firebase_api_json'''
+    regex = '''firebase[_-]?api[_-]?json(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "firebase_api_token_844"
+    description = '''firebase_api_token'''
+    regex = '''firebase[_-]?api[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "firebase_key_845"
+    description = '''firebase_key'''
+    regex = '''firebase[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "firebase_token_846"
+    description = '''firebase_token'''
+    regex = '''firebase[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "firefox_secret_847"
+    description = '''firefox_secret'''
+    regex = '''firefox[_-]?secret(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "ftp_pw_848"
+    description = '''ftp_pw'''
+    regex = '''ftp[_-]?pw(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "gh_api_key_849"
+    description = '''gh_api_key'''
+    regex = '''gh[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "github_api_key_850"
+    description = '''github_api_key'''
+    regex = '''github[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "github_oauth_851"
+    description = '''github_oauth'''
+    regex = '''github[_-]?oauth(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "github_token_852"
+    description = '''github_token'''
+    regex = '''github[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "github_tokens_853"
+    description = '''github_tokens'''
+    regex = '''github[_-]?tokens(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "google_client_id_854"
+    description = '''google_client_id'''
+    regex = '''google[_-]?client[_-]?id(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "google_client_secret_855"
+    description = '''google_client_secret'''
+    regex = '''google[_-]?client[_-]?secret(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "google_maps_api_key_856"
+    description = '''google_maps_api_key'''
+    regex = '''google[_-]?maps[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "google_oauth_857"
+    description = '''google_oauth'''
+    regex = '''(ya29.[0-9A-Za-z-_]+)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "mailchimp_858"
+    description = '''mailchimp'''
+    regex = '''(W(?:[a-f0-9]{32}(-us[0-9]{1,2}))a-zA-Z0-9)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "mailgun_priv_key_859"
+    description = '''mailgun_priv_key'''
+    regex = '''mailgun[_-]?priv[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "mailgun_secret_api_key_860"
+    description = '''mailgun_secret_api_key'''
+    regex = '''mailgun[_-]?secret[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "master_password_861"
+    description = '''master_password'''
+    regex = '''(master_password).+'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "mg_public_api_key_862"
+    description = '''mg_public_api_key'''
+    regex = '''mg[_-]?public[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "mysql_root_password_863"
+    description = '''mysql_root_password'''
+    regex = '''mysql[_-]?root[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "netlify_api_key_864"
+    description = '''netlify_api_key'''
+    regex = '''netlify[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "rabbitmq_password_865"
+    description = '''rabbitmq_password'''
+    regex = '''rabbitmq[_-]?password(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "rediscloud_url_866"
+    description = '''rediscloud_url'''
+    regex = '''rediscloud[_-]?url(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "release_gh_token_867"
+    description = '''release_gh_token'''
+    regex = '''release[_-]?gh[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "rubygems_auth_token_868"
+    description = '''rubygems_auth_token'''
+    regex = '''rubygems[_-]?auth[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "travis_secure_env_vars_869"
+    description = '''travis_secure_env_vars'''
+    regex = '''travis[_-]?secure[_-]?env[_-]?vars(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "travis_token_870"
+    description = '''travis_token'''
+    regex = '''travis[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twilio_api_key_871"
+    description = '''twilio_api_key'''
+    regex = '''twilio[_-]?api[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twilio_api_secret_872"
+    description = '''twilio_api_secret'''
+    regex = '''twilio[_-]?api[_-]?secret(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twilio_chat_account_api_service_873"
+    description = '''twilio_chat_account_api_service'''
+    regex = '''twilio[_-]?chat[_-]?account[_-]?api[_-]?service(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twilio_token_874"
+    description = '''twilio_token'''
+    regex = '''twilio[_-]?token(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twitter_consumer_key_875"
+    description = '''twitter_consumer_key'''
+    regex = '''twitter[_-]?consumer[_-]?key(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twitter_consumer_secret_876"
+    description = '''twitter_consumer_secret'''
+    regex = '''twitter[_-]?consumer[_-]?secret(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twitteroauthaccesssecret_877"
+    description = '''twitteroauthaccesssecret'''
+    regex = '''twitteroauthaccesssecret(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "twitteroauthaccesstoken_878"
+    description = '''twitteroauthaccesstoken'''
+    regex = '''twitteroauthaccesstoken(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "urban_master_secret_879"
+    description = '''urban_master_secret'''
+    regex = '''urban[_-]?master[_-]?secret(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "use_ssh_880"
+    description = '''use_ssh'''
+    regex = '''use[_-]?ssh(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "user_assets_access_key_id_881"
+    description = '''user_assets_access_key_id'''
+    regex = '''user[_-]?assets[_-]?access[_-]?key[_-]?id(=| =|:| :)'''
+    tags = ["secret"]
+
+[[rules]]
+    ID = "virustotal_apikey_882"
+    description = '''virustotal_apikey'''
+    regex = '''virustotal[_-]?apikey(=| =|:| :)'''
+    tags = ["secret"]
